@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Matching Game · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell match-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <a id="choose-link" class="back-link" href="minuscule.html">← Choose letters</a>
+      </header>
+
+      <section class="match-section" aria-labelledby="match-title">
+        <div class="match-heading">
+          <div>
+            <p id="game-eyebrow" class="eyebrow">Minuscule matching game</p>
+            <h1 id="match-title">Match letter to sound.</h1>
+            <p class="match-directions">Choose a Greek letter, then choose its English sound. The choices are shuffled.</p>
+          </div>
+          <div class="match-progress" aria-live="polite"><strong id="matched-count">0</strong><span>matched</span></div>
+        </div>
+
+        <div class="match-board" aria-label="Greek letter matching game">
+          <section class="match-column" aria-labelledby="greek-heading">
+            <h2 id="greek-heading">Greek letter</h2>
+            <div id="greek-options" class="match-options"></div>
+          </section>
+          <section class="match-column" aria-labelledby="sound-heading">
+            <h2 id="sound-heading">English sound</h2>
+            <div id="sound-options" class="match-options"></div>
+          </section>
+        </div>
+
+        <div id="game-message" class="game-message" role="status" aria-live="polite">Select one item from each side.</div>
+        <div id="complete-panel" class="complete-panel" hidden>
+          <span class="complete-mark">✓</span>
+          <div><strong>Excellent work.</strong><span>You matched every letter in this round.</span></div>
+          <button id="play-again" type="button">Play again</button>
+        </div>
+      </section>
+      <footer><span>Koine pronunciation</span><span class="dot">•</span><span>Listen. Notice. Speak.</span></footer>
+    </main>
+    <script src="match.js"></script>
+  </body>
+</html>

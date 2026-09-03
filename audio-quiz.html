@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Sound Matching Quiz · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell sound-quiz-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="audio.html">← Choose sounds</a>
+      </header>
+
+      <section class="sound-quiz" aria-labelledby="sound-title">
+        <div class="sound-quiz-heading">
+          <div>
+            <p class="eyebrow">Sound matching quiz</p>
+            <h1 id="sound-title">Which letter do you hear?</h1>
+            <p class="match-directions">Play the unmarked sound, then choose its Greek letter.</p>
+          </div>
+          <div class="question-count"><strong id="question-number">1</strong><span id="question-total">of 4</span></div>
+        </div>
+
+        <section class="sound-player" aria-label="Unmarked Greek letter sound">
+          <button id="play-sound" class="play-sound" type="button" aria-label="Play the mystery sound">
+            <span class="speaker-icon" aria-hidden="true">▶</span>
+            <span>Play sound</span>
+          </button>
+          <p id="play-hint">Listen carefully. You may replay the sound.</p>
+          <audio id="letter-audio" preload="auto"></audio>
+        </section>
+
+        <section class="answer-section" aria-labelledby="answer-heading">
+          <h2 id="answer-heading">Choose the matching letter</h2>
+          <div id="audio-answers" class="audio-answers"></div>
+        </section>
+        <div id="audio-feedback" class="game-message" role="status" aria-live="polite">Play the sound to begin.</div>
+
+        <div id="audio-complete" class="complete-panel" hidden>
+          <span class="complete-mark">✓</span>
+          <div><strong>Excellent listening.</strong><span>You identified every sound in this round.</span></div>
+          <button id="listen-again" type="button">Play again</button>
+        </div>
+      </section>
+      <footer><span>Koine pronunciation</span><span class="dot">•</span><span>Listen. Notice. Speak.</span></footer>
+    </main>
+    <script src="audio-quiz.js"></script>
+  </body>
+</html>

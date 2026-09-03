@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Learn the Sounds · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell soundboard-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="learn-sounds.html">← Choose letters</a>
+      </header>
+
+      <section class="soundboard" aria-labelledby="soundboard-title">
+        <p class="eyebrow">Learn the Sounds</p>
+        <h1 id="soundboard-title">Press a letter. Hear its sound.</h1>
+        <p class="match-directions">Listen as often as you like. The highlighted button shows which letter is playing.</p>
+        <div id="sound-groups" class="sound-groups"></div>
+        <p id="sound-status" class="game-message" role="status" aria-live="polite">Choose any letter to begin.</p>
+        <audio id="learning-audio" preload="auto"></audio>
+      </section>
+      <footer><span>Koine pronunciation</span><span class="dot">•</span><span>Listen. Notice. Speak.</span></footer>
+    </main>
+    <script src="soundboard.js"></script>
+  </body>
+</html>

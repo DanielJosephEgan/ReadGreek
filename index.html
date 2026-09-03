@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>φωνή · Koine Greek</title>
+    <meta name="description" content="A calm, guided way to learn the Koine Greek alphabet and pronunciation." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="lesson-shell home-page">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <div class="lesson-pill"><span></span> Lesson 1 of 24</div>
+      </header>
+
+      <section class="welcome" aria-labelledby="welcome-title">
+        <p class="eyebrow">Begin with the alphabet</p>
+        <h1 id="welcome-title">Which form would you like<br />to meet first?</h1>
+        <p class="intro">In Greek, capital and minuscule letters have their own character. Choose one form to begin a gentle, spoken introduction.</p>
+
+        <div class="choice-grid" role="group" aria-label="Choose letter form">
+          <button class="letter-choice" type="button" data-choice="Capital letters" data-href="capital.html">
+            <span class="choice-top"><span class="choice-number">01</span><span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="greek-sample uppercase" aria-hidden="true">Α Β Γ</span>
+            <span class="choice-copy"><strong>Capital letters</strong><small>The formal, monumental forms</small></span>
+          </button>
+          <button class="letter-choice selected" type="button" data-choice="Minuscule letters" data-href="minuscule.html" aria-pressed="true">
+            <span class="choice-top"><span class="choice-number">02</span><span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="greek-sample" aria-hidden="true">α β γ</span>
+            <span class="choice-copy"><strong>Minuscule letters</strong><small>The everyday manuscript forms</small></span>
+          </button>
+          <button class="letter-choice" type="button" data-choice="Match letter forms" data-href="forms.html">
+            <span class="choice-top"><span class="choice-number">03</span><span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="greek-sample paired-sample" aria-hidden="true">Α α&nbsp; Β β</span>
+            <span class="choice-copy"><strong>Match letter forms</strong><small>Capital and minuscule together</small></span>
+          </button>
+          <button class="letter-choice audio-choice" type="button" data-choice="Listen and match" data-href="audio.html">
+            <span class="choice-top"><span class="choice-number">04</span><span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="greek-sample audio-sample" aria-hidden="true"><span class="sound-mark">♪</span> Α α</span>
+            <span class="choice-copy"><strong>Listen and match</strong><small>Hear the sound, choose the letter</small></span>
+          </button>
+          <button class="letter-choice audio-choice" type="button" data-choice="Learn the Sounds" data-href="learn-sounds.html">
+            <span class="choice-top"><span class="choice-number">05</span><span class="arrow" aria-hidden="true">↗</span></span>
+            <span class="greek-sample audio-sample" aria-hidden="true"><span class="sound-mark">▶</span> Β β</span>
+            <span class="choice-copy"><strong>Learn the Sounds</strong><small>Press a letter to hear it</small></span>
+          </button>
+        </div>
+
+        <p class="hint"><span>✦</span> You can switch forms any time as you learn.</p>
+      </section>
+
+      <footer><span>Koine pronunciation</span><span class="dot">•</span><span>Listen. Notice. Speak.</span></footer>
+    </main>
+    <div class="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

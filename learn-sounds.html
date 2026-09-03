@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Learn the Sounds · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell selection-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Back to activity choices"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="index.html">← Activity choices</a>
+      </header>
+      <section class="study-selection" aria-labelledby="study-title">
+        <p class="eyebrow">Learn the Sounds</p>
+        <h1 id="study-title">Choose your letters.</h1>
+        <p class="intro">Select which letter sounds you would like to learn.</p>
+        <form id="letter-form" class="letter-groups">
+          <label class="letter-group"><span class="group-letters">α&nbsp; β&nbsp; γ&nbsp; δ</span><span class="group-control"><input type="checkbox" name="study-group" value="alpha-delta" /><span>Learn this group</span></span></label>
+          <label class="letter-group"><span class="group-letters">ε&nbsp; ζ&nbsp; η&nbsp; θ</span><span class="group-control"><input type="checkbox" name="study-group" value="epsilon-theta" /><span>Learn this group</span></span></label>
+          <label class="letter-group"><span class="group-letters">ι&nbsp; κ&nbsp; λ&nbsp; μ</span><span class="group-control"><input type="checkbox" name="study-group" value="iota-mu" /><span>Learn this group</span></span></label>
+          <label class="letter-group"><span class="group-letters">ν&nbsp; ξ&nbsp; ο&nbsp; π</span><span class="group-control"><input type="checkbox" name="study-group" value="nu-pi" /><span>Learn this group</span></span></label>
+          <label class="letter-group"><span class="group-letters">ρ&nbsp; σ&nbsp; τ&nbsp; υ</span><span class="group-control"><input type="checkbox" name="study-group" value="rho-upsilon" /><span>Learn this group</span></span></label>
+          <label class="letter-group"><span class="group-letters">φ&nbsp; χ&nbsp; ψ&nbsp; ω</span><span class="group-control"><input type="checkbox" name="study-group" value="phi-omega" /><span>Learn this group</span></span></label>
+        </form>
+        <button class="test-button" type="button" disabled>Learn <span>→</span></button>
+      </section>
+      <footer><span>Koine pronunciation</span><span class="dot">•</span><span>Listen. Notice. Speak.</span></footer>
+    </main>
+    <script src="learn-sounds.js"></script>
+  </body>
+</html>

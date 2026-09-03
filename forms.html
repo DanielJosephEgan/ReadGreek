@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Match Letter Forms · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell selection-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Back to letter-form choice"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="index.html">← Letter forms</a>
+      </header>
+      <section class="study-selection" aria-labelledby="study-title">
+        <p class="eyebrow">Capital + minuscule</p>
+        <h1 id="study-title">Choose your letters.</h1>
+        <p class="intro">Select which letters you would like to match.</p>
+        <form id="letter-form" class="letter-groups">
+          <label class="letter-group paired-group"><span class="group-letters form-pairs">Α α&nbsp; Β β<br />Γ γ&nbsp; Δ δ</span><span class="group-control"><input type="checkbox" name="study-group" value="alpha-delta" /><span>Study this group</span></span></label>
+          <label class="letter-group paired-group"><span class="group-letters form-pairs">Ε ε&nbsp; Ζ ζ<br />Η η&nbsp; Θ θ</span><span class="group-control"><input type="checkbox" name="study-group" value="epsilon-theta" /><span>Study this group</span></span></label>
+          <label class="letter-group paired-group"><span class="group-letters form-pairs">Ι ι&nbsp; Κ κ<br />Λ λ&nbsp; Μ μ</span><span class="group-control"><input type="checkbox" name="study-group" value="iota-mu" /><span>Study this group</span></span></label>
+          <label class="letter-group paired-group"><span class="group-letters form-pairs">Ν ν&nbsp; Ξ ξ<br />Ο ο&nbsp; Π π</span><span class="group-control"><input type="checkbox" name="study-group" value="nu-pi" /><span>Study this group</span></span></label>
+          <label class="letter-group paired-group"><span class="group-letters form-pairs">Ρ ρ&nbsp; Σ σ<br />Τ τ&nbsp; Υ υ</span><span class="group-control"><input type="checkbox" name="study-group" value="rho-upsilon" /><span>Study this group</span></span></label>
+          <label class="letter-group paired-group"><span class="group-letters form-pairs">Φ φ&nbsp; Χ χ<br />Ψ ψ&nbsp; Ω ω</span><span class="group-control"><input type="checkbox" name="study-group" value="phi-omega" /><span>Study this group</span></span></label>
+        </form>
+        <button class="test-button" type="button" disabled>Test <span>→</span></button>
+      </section>
+      <footer><span>Koine pronunciation</span><span class="dot">•</span><span>Listen. Notice. Speak.</span></footer>
+    </main>
+    <script src="forms.js"></script>
+  </body>
+</html>
