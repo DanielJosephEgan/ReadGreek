@@ -35,6 +35,18 @@ const letterGroups = {
     { id: 'psi', letter: 'Ψ ψ', audio: '23 psi.mp3' },
     { id: 'omega', letter: 'Ω ω', audio: '24 omega.mp3' },
   ],
+  'diphthongs-ai-au': [
+    { id: 'diphthong-ai', letter: 'αι', audio: '001 ai.mp3' },
+    { id: 'diphthong-ei', letter: 'ει', audio: '002 ei.mp3' },
+    { id: 'diphthong-oi', letter: 'οι', audio: '003 oi.mp3' },
+    { id: 'diphthong-ui', letter: 'υι', audio: '004 ui.mp3' },
+  ],
+  'diphthongs-eu-gg': [
+    { id: 'diphthong-eu', letter: 'ευ', audio: '006 eu.mp3' },
+    { id: 'diphthong-ou', letter: 'ου', audio: '007 ou.mp3' },
+    { id: 'diphthong-au', letter: 'αυ', audio: '005 au.mp3' },
+    { id: 'diphthong-ng', letter: 'γγ', audio: '008 ng.mp3' },
+  ],
 };
 
 const shuffle = (items) => {

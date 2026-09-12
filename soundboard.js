@@ -53,6 +53,24 @@ const letterGroups = {
       { name: 'Omega', letter: 'Ω ω', audio: '24 omega.mp3' },
     ],
   },
+  'diphthongs-ai-au': {
+    heading: 'Diphthongs · group 1',
+    letters: [
+      { name: 'αι', letter: 'αι', guide: 'like the ai in aisle', example: 'αιsle', audio: '001 ai.mp3' },
+      { name: 'ει', letter: 'ει', guide: 'like the eigh in eight', example: 'ειght', audio: '002 ei.mp3' },
+      { name: 'οι', letter: 'οι', guide: 'like the oi in oil', example: 'οιl', audio: '003 oi.mp3' },
+      { name: 'υι', letter: 'υι', guide: 'like the ui in suite', example: 'sυιte', audio: '004 ui.mp3' },
+    ],
+  },
+  'diphthongs-eu-gg': {
+    heading: 'Diphthongs · group 2',
+    letters: [
+      { name: 'ευ', letter: 'ευ', guide: 'like the eu in feud', example: 'fευd', audio: '006 eu.mp3' },
+      { name: 'ου', letter: 'ου', guide: 'like the ou in soup', example: 'sουp', audio: '007 ou.mp3' },
+      { name: 'αυ', letter: 'αυ', guide: 'like the au in sauerkraut', example: 'sαυerkrαυt', audio: '005 au.mp3' },
+      { name: 'γγ', letter: 'γγ', guide: 'like the ng in angle', example: 'aγγle', audio: '008 ng.mp3' },
+    ],
+  },
 };
 
 const params = new URLSearchParams(window.location.search);
@@ -66,7 +84,17 @@ function makeLetterButton(letter) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'sound-letter';
-  button.innerHTML = `<span class="sound-letter-greek">${letter.letter}</span><span class="sound-letter-name">${letter.name}</span><span class="sound-letter-play" aria-hidden="true">▶</span>`;
+  if (letter.guide) button.classList.add('diphthong-audio');
+  if (!letter.audio) {
+    button.classList.add('no-audio');
+    button.disabled = true;
+    button.innerHTML = `<span class="sound-letter-greek">${letter.letter}</span><span class="diphthong-guide">${letter.guide}</span><span class="diphthong-example">${letter.example}</span><span class="audio-soon">Audio soon</span>`;
+    button.setAttribute('aria-label', `${letter.letter}: ${letter.guide}. Example: ${letter.example}. Audio coming soon.`);
+    return button;
+  }
+  button.innerHTML = letter.guide
+    ? `<span class="sound-letter-greek">${letter.letter}</span><span class="diphthong-guide">${letter.guide}</span><span class="diphthong-example">${letter.example}</span><span class="sound-letter-play" aria-hidden="true">▶</span>`
+    : `<span class="sound-letter-greek">${letter.letter}</span><span class="sound-letter-name">${letter.name}</span><span class="sound-letter-play" aria-hidden="true">▶</span>`;
   button.setAttribute('aria-label', `Play the sound for ${letter.name}`);
   button.addEventListener('click', async () => {
     if (activeButton) activeButton.classList.remove('playing');
@@ -91,7 +119,7 @@ chosenGroups.forEach((groupId) => {
   const section = document.createElement('section');
   section.className = 'sound-group';
   const heading = document.createElement('h2');
-  heading.textContent = `Letters ${group.range}`;
+  heading.textContent = group.heading || `Letters ${group.range}`;
   const buttons = document.createElement('div');
   buttons.className = 'sound-letter-grid';
   buttons.replaceChildren(...group.letters.map(makeLetterButton));
