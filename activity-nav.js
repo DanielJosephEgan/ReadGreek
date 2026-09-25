@@ -18,7 +18,7 @@ const activities = [
   { id: 'forms', number: '03', href: 'forms.html', sample: 'Α α&nbsp; Β β', title: 'Match letter forms' },
   { id: 'audio', number: '04', href: 'audio.html', sample: '<b>♪</b> Α α', title: 'Listen and match', audio: true },
   { id: 'learn', number: '05', href: 'learn-sounds.html', sample: '<b>▶</b> Β β', title: 'Learn the Sounds', audio: true },
-  { id: 'vocabulary', number: '06', href: 'vocabulary.html', sample: 'θεός', title: 'Class 4 Vocabulary' },
+  { id: 'vocabulary', number: '06', href: 'index.html#class-4-vocabulary', sample: 'θεός', title: 'Class 4 Vocabulary' },
 ];
 
 const nav = document.createElement('nav');

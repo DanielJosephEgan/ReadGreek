@@ -81,6 +81,7 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .vocabulary-card-copy strong { display:block; margin-top:9px; color:#946519; font-size:13px; }
 .vocabulary-play-button { display:block; margin-top:22px; padding:17px 20px; border-radius:15px; background:#293a5d; box-shadow:0 6px 0 #1d2b48; color:#fff; text-align:center; text-decoration:none; font:700 18px Georgia,serif; transition:transform .14s ease,box-shadow .14s ease; }
 .vocabulary-play-button:hover,.vocabulary-play-button:focus-visible { transform:translateY(-2px); box-shadow:0 8px 0 #1d2b48; outline:3px solid rgba(91,143,201,.3); outline-offset:2px; }
+.home-vocabulary-card { margin-top:28px; scroll-margin-top:225px; }
 
 .vocabulary-challenge-page { --pair-navy:#293a5d; --pair-gold:#c8912f; --pair-green:#28775a; width:min(1180px,100%); }
 .pairs-challenge { width:min(1000px,100%); margin:auto 0; padding:34px 0 50px; }

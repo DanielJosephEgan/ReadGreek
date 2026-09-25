@@ -49,12 +49,24 @@
             <span class="greek-sample audio-sample" aria-hidden="true"><span class="sound-mark">▶</span> Β β</span>
             <span class="choice-copy"><strong>Learn the Sounds</strong><small>Press a letter to hear it</small></span>
           </button>
-          <button class="letter-choice vocabulary-choice" type="button" data-choice="Class 4 Vocabulary" data-href="vocabulary.html">
+          <button class="letter-choice vocabulary-choice" type="button" data-choice="Class 4 Vocabulary" data-href="#class-4-vocabulary">
             <span class="choice-top"><span class="choice-number">06</span><span class="arrow" aria-hidden="true">↗</span></span>
             <span class="greek-sample vocabulary-sample" aria-hidden="true">θεός</span>
             <span class="choice-copy"><strong>Class 4 Vocabulary</strong><small>Match Greek words with English meanings</small></span>
           </button>
         </div>
+
+        <article id="class-4-vocabulary" class="vocabulary-lesson-card home-vocabulary-card">
+          <div class="vocabulary-card-copy">
+            <span class="vocabulary-card-icon" aria-hidden="true">A↔A</span>
+            <div>
+              <h2>Class 4 Vocabulary</h2>
+              <p>Match each Greek word with its English meaning.</p>
+              <strong id="vocabulary-best">Best: not played yet</strong>
+            </div>
+          </div>
+          <a class="vocabulary-play-button" href="vocabulary-game.html">Play vocabulary</a>
+        </article>
 
         <p class="hint"><span>✦</span> You can switch forms any time as you learn.</p>
       </section>
@@ -63,5 +75,6 @@
     </main>
     <div class="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>
+    <script src="vocabulary-start.js"></script>
   </body>
 </html>
