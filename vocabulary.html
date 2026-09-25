@@ -12,43 +12,32 @@
     <script src="activity-nav.js" defer></script>
   </head>
   <body class="with-activity-dock">
-    <main class="lesson-shell match-page vocabulary-page">
+    <main class="lesson-shell vocabulary-hub-page">
       <header class="topbar">
         <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
         <a class="back-link" href="index.html">← Home</a>
       </header>
 
-      <section class="match-section" aria-labelledby="vocabulary-title">
-        <div class="match-heading">
-          <div>
-            <p class="eyebrow">Class 4 vocabulary</p>
-            <h1 id="vocabulary-title">Match each word with its meaning.</h1>
-            <p class="match-directions">Choose a Greek word, then choose its English meaning. Both columns are shuffled.</p>
-            <p class="vocabulary-source">Words from the Class 4 study list</p>
+      <section class="vocabulary-hub" aria-labelledby="vocabulary-hub-title">
+        <p class="eyebrow">Class 4</p>
+        <h1 id="vocabulary-hub-title">Vocabulary</h1>
+        <p class="intro">Practice the ten Greek words from Class 4 by matching each word with its English meaning.</p>
+
+        <article class="vocabulary-lesson-card">
+          <div class="vocabulary-card-copy">
+            <span class="vocabulary-card-icon" aria-hidden="true">A↔A</span>
+            <div>
+              <h2>Class 4 Vocabulary</h2>
+              <p>Match each Greek word with its English meaning.</p>
+              <strong id="vocabulary-best">Best: not played yet</strong>
+            </div>
           </div>
-          <div class="match-progress" aria-live="polite"><strong id="matched-count">0</strong><span>of 10</span></div>
-        </div>
-
-        <div class="match-board" aria-label="Class 4 Greek vocabulary matching game">
-          <section class="match-column" aria-labelledby="greek-heading">
-            <h2 id="greek-heading">Greek word</h2>
-            <div id="greek-options" class="match-options"></div>
-          </section>
-          <section class="match-column" aria-labelledby="english-heading">
-            <h2 id="english-heading">English meaning</h2>
-            <div id="english-options" class="match-options"></div>
-          </section>
-        </div>
-
-        <div id="game-message" class="game-message" role="status" aria-live="polite">Select one item from each side.</div>
-        <div id="complete-panel" class="complete-panel" hidden>
-          <span class="complete-mark">✓</span>
-          <div><strong>Excellent work.</strong><span>You matched all ten Class 4 words.</span></div>
-          <button id="play-again" type="button">Play again</button>
-        </div>
+          <a class="vocabulary-play-button" href="vocabulary-game.html">Play vocabulary</a>
+        </article>
       </section>
+
       <footer><span>Class 4 vocabulary</span><span class="dot">•</span><span>Read. Match. Remember.</span></footer>
     </main>
-    <script src="vocabulary.js"></script>
+    <script src="vocabulary-start.js"></script>
   </body>
 </html>

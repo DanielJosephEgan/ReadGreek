@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Class 4 Vocabulary Challenge · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell vocabulary-challenge-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="vocabulary.html">← Class 4 Vocabulary</a>
+      </header>
+
+      <section class="pairs-challenge" aria-labelledby="vocabulary-title">
+        <div class="pairs-intro">
+          <div class="pairs-heading">
+            <p class="pairs-kicker">Pairs challenge</p>
+            <h1 id="vocabulary-title">Class 4 Vocabulary</h1>
+            <p>Match every Greek word with its English meaning.</p>
+          </div>
+
+          <div class="pair-pace-panel" aria-label="Challenge pace">
+            <div class="pair-clock" aria-live="polite">
+              <strong id="elapsed-time">0</strong>
+              <span>elapsed</span>
+            </div>
+            <div class="speed-gauge">
+              <div class="speed-gauge-face" aria-hidden="true">
+                <span class="speed-label speed-label-slow">Slow</span>
+                <span class="speed-label speed-label-fast">Fast</span>
+                <span id="speed-needle" class="speed-needle"></span>
+                <span class="speed-hub"></span>
+              </div>
+              <div class="speed-readout">
+                <strong id="speed-status">Start matching</strong>
+                <span>Average: <b id="average-time">—</b> sec / pair</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pair-scoreline">
+          <span>Choose one card from each side.</span>
+          <strong><span id="matched-count">0</span> / 10</strong>
+        </div>
+
+        <div class="pairs-board" aria-label="Class 4 Greek vocabulary matching game">
+          <section class="pair-column" aria-label="Greek words">
+            <h2>Greek word</h2>
+            <div id="greek-options" class="pair-options"></div>
+          </section>
+          <section class="pair-column" aria-label="English meanings">
+            <h2>English meaning</h2>
+            <div id="english-options" class="pair-options"></div>
+          </section>
+        </div>
+
+        <p id="game-message" class="pair-message" role="status" aria-live="polite">Choose one card from each side.</p>
+        <div id="complete-panel" class="pair-completion" hidden>
+          <div>
+            <strong>Excellent work!</strong>
+            <span id="completion-time">You matched all ten Class 4 words.</span>
+          </div>
+          <button id="play-again" type="button">Play again</button>
+        </div>
+      </section>
+    </main>
+    <script src="vocabulary.js"></script>
+  </body>
+</html>

@@ -25,15 +25,23 @@ const englishOptions = document.querySelector('#english-options');
 const count = document.querySelector('#matched-count');
 const message = document.querySelector('#game-message');
 const completePanel = document.querySelector('#complete-panel');
+const elapsedLabel = document.querySelector('#elapsed-time');
+const averageLabel = document.querySelector('#average-time');
+const speedStatus = document.querySelector('#speed-status');
+const speedNeedle = document.querySelector('#speed-needle');
+const completionTime = document.querySelector('#completion-time');
 let selectedGreek = null;
 let selectedEnglish = null;
 let matched = 0;
 let checking = false;
+let startedAt = 0;
+let elapsed = 0;
+let timer = null;
 
 function makeOption(item, side) {
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = `match-option ${side === 'greek' ? 'vocabulary-greek' : 'vocabulary-english'}`;
+  button.className = `pair-card ${side === 'greek' ? 'greek-pair' : 'english-pair'}`;
   button.dataset.match = item.id;
   button.textContent = side === 'greek' ? item.greek : item.english;
   button.setAttribute('aria-label', side === 'greek' ? `Greek word ${item.greek}` : `English meaning ${item.english}`);
@@ -41,21 +49,61 @@ function makeOption(item, side) {
   return button;
 }
 
+function startTimer() {
+  if (timer) return;
+  startedAt = Date.now() - elapsed * 1000;
+  timer = window.setInterval(updateTimer, 250);
+}
+
+function updateTimer() {
+  elapsed = Math.floor((Date.now() - startedAt) / 1000);
+  elapsedLabel.textContent = String(elapsed);
+  updatePace();
+}
+
+function updatePace() {
+  if (matched === 0) {
+    averageLabel.textContent = '—';
+    speedStatus.textContent = timer ? 'Keep matching' : 'Start matching';
+    speedNeedle.style.setProperty('--speed-angle', '-52deg');
+    return;
+  }
+  const average = Math.max(0.1, elapsed / matched);
+  averageLabel.textContent = average.toFixed(1);
+  speedStatus.textContent = average <= 4 ? 'Fast pace' : average <= 8 ? 'Steady pace' : 'Careful pace';
+  const clamped = Math.min(14, Math.max(2, average));
+  const angle = 52 - ((clamped - 2) / 12) * 104;
+  speedNeedle.style.setProperty('--speed-angle', `${angle}deg`);
+}
+
+function stopTimer() {
+  if (timer) window.clearInterval(timer);
+  timer = null;
+  updateTimer();
+}
+
 function renderGame() {
+  if (timer) window.clearInterval(timer);
   greekOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'greek')));
   englishOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'english')));
   selectedGreek = null;
   selectedEnglish = null;
   matched = 0;
   checking = false;
+  startedAt = 0;
+  elapsed = 0;
+  timer = null;
   count.textContent = '0';
-  message.textContent = 'Select one item from each side.';
-  message.className = 'game-message';
+  elapsedLabel.textContent = '0';
+  message.textContent = 'Choose one card from each side.';
+  message.className = 'pair-message';
   completePanel.hidden = true;
+  updatePace();
 }
 
 function chooseOption(button, side) {
   if (checking || button.classList.contains('matched')) return;
+  startTimer();
   const current = side === 'greek' ? selectedGreek : selectedEnglish;
   if (current) current.classList.remove('selected');
   button.classList.add('selected');
@@ -74,27 +122,43 @@ function checkMatch() {
     matched += 1;
     count.textContent = String(matched);
     message.textContent = 'That is a match.';
-    message.className = 'game-message success';
+    message.className = 'pair-message success';
     selectedGreek = null;
     selectedEnglish = null;
     checking = false;
-    if (matched === vocabulary.length) completePanel.hidden = false;
+    updatePace();
+    if (matched === vocabulary.length) finishGame();
     return;
   }
 
   const wrongGreek = selectedGreek;
   const wrongEnglish = selectedEnglish;
-  wrongGreek.classList.add('incorrect');
-  wrongEnglish.classList.add('incorrect');
+  wrongGreek.classList.add('wrong');
+  wrongEnglish.classList.add('wrong');
   message.textContent = 'Not quite. Try those again.';
-  message.className = 'game-message error';
-  setTimeout(() => {
-    wrongGreek.classList.remove('selected', 'incorrect');
-    wrongEnglish.classList.remove('selected', 'incorrect');
+  message.className = 'pair-message error';
+  window.setTimeout(() => {
+    wrongGreek.classList.remove('selected', 'wrong');
+    wrongEnglish.classList.remove('selected', 'wrong');
     selectedGreek = null;
     selectedEnglish = null;
     checking = false;
   }, 650);
+}
+
+function finishGame() {
+  stopTimer();
+  const finalTime = Math.max(1, elapsed);
+  completionTime.textContent = `You matched all ten words in ${finalTime} seconds.`;
+  completePanel.hidden = false;
+  try {
+    const savedBest = Number(window.localStorage.getItem('class4VocabularyBest'));
+    if (!savedBest || finalTime < savedBest) {
+      window.localStorage.setItem('class4VocabularyBest', String(finalTime));
+    }
+  } catch {
+    // The game still works if the browser does not allow saved progress.
+  }
 }
 
 document.querySelector('#play-again').addEventListener('click', renderGame);
