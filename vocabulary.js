@@ -115,10 +115,12 @@ function chooseOption(button, side) {
 function checkMatch() {
   checking = true;
   if (selectedGreek.dataset.match === selectedEnglish.dataset.match) {
-    selectedGreek.classList.replace('selected', 'matched');
-    selectedEnglish.classList.replace('selected', 'matched');
-    selectedGreek.disabled = true;
-    selectedEnglish.disabled = true;
+    const matchedGreek = selectedGreek;
+    const matchedEnglish = selectedEnglish;
+    matchedGreek.classList.replace('selected', 'matched');
+    matchedEnglish.classList.replace('selected', 'matched');
+    matchedGreek.disabled = true;
+    matchedEnglish.disabled = true;
     matched += 1;
     count.textContent = String(matched);
     message.textContent = 'That is a match.';
@@ -127,6 +129,10 @@ function checkMatch() {
     selectedEnglish = null;
     checking = false;
     updatePace();
+    window.setTimeout(() => {
+      matchedGreek.remove();
+      matchedEnglish.remove();
+    }, 260);
     if (matched === vocabulary.length) finishGame();
     return;
   }

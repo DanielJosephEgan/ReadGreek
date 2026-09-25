@@ -118,7 +118,7 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .pair-card:focus-visible { outline:3px solid rgba(91,143,201,.3); outline-offset:2px; }
 .pair-card.selected { border-color:#5b8fc9; background:#edf5fc; color:#315d8d; }
 .pair-card.wrong { border-color:#de6d5f; background:#fff0ee; color:#a9473d; animation:pair-nudge .18s ease-in-out 2; }
-.pair-card.matched { border-color:#9bcdb8; background:#e7f5ee; color:var(--pair-green); opacity:.38; box-shadow:none; }
+.pair-card.matched { border-color:#9bcdb8; background:#e7f5ee; color:var(--pair-green); opacity:0; transform:scale(.96); box-shadow:none; pointer-events:none; }
 .pair-message { min-height:22px; margin:13px 0 0; color:#667085; font-size:13px; }
 .pair-message.success { color:var(--pair-green); }
 .pair-message.error { color:#a9473d; }
