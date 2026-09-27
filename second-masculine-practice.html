@@ -35,6 +35,24 @@
 
         <div id="type-practice" class="type-practice" hidden>
           <div id="type-list" class="ending-type-list" aria-label="Type the endings"></div>
+          <section class="greek-keyboard-panel" aria-labelledby="greek-keyboard-title">
+            <div class="greek-keyboard-copy">
+              <strong id="greek-keyboard-title">Built-in Greek keypad</strong>
+              <span>Click an answer box, then use these keys. On a regular keyboard, <b>w</b> represents omega.</span>
+            </div>
+            <div id="greek-keyboard" class="greek-keyboard" aria-label="Greek character keypad">
+              <button type="button" data-greek-key="ο" aria-label="Greek omicron">ο</button>
+              <button type="button" data-greek-key="υ" aria-label="Greek upsilon">υ</button>
+              <button type="button" data-greek-key="ι" aria-label="Greek iota">ι</button>
+              <button type="button" data-greek-key="ω" aria-label="Greek omega">ω</button>
+              <button type="button" data-greek-key="ῳ" aria-label="Greek omega with iota subscript">ῳ</button>
+              <button type="button" data-greek-key="ν" aria-label="Greek nu">ν</button>
+              <button type="button" data-greek-key="ς" aria-label="Greek final sigma">ς</button>
+              <button class="keyboard-action" type="button" data-keyboard-action="backspace" aria-label="Backspace">⌫</button>
+              <button class="keyboard-action keyboard-clear" type="button" data-keyboard-action="clear">Clear</button>
+            </div>
+            <p class="keyboard-shortcut-note">Latin shortcuts accepted: <b>o</b>, <b>u</b>, <b>i</b>, <b>w</b>, <b>n</b>, and <b>s</b>.</p>
+          </section>
         </div>
 
         <p id="practice-message" class="ending-practice-message" role="status" aria-live="polite"></p>

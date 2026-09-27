@@ -196,6 +196,18 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .ending-type-row input:focus { border-color:var(--ending-blue); outline:3px solid rgba(91,143,201,.2); }
 .ending-type-row.correct input { border-color:#69a98d; background:#f6fffa; }
 .ending-type-row.wrong input { border-color:#de6d5f; background:#fffafa; }
+.greek-keyboard-panel { margin-top:16px; padding:14px 15px 15px; border:1px solid #dfd2b8; border-radius:16px; background:#fffaf0; }
+.greek-keyboard-copy { display:flex; align-items:baseline; justify-content:space-between; gap:16px; }
+.greek-keyboard-copy strong { color:var(--ending-navy); font:700 16px Georgia,serif; }
+.greek-keyboard-copy span { color:#667085; font-size:11px; line-height:1.4; text-align:right; }
+.greek-keyboard { display:grid; grid-template-columns:repeat(7,minmax(44px,1fr)) repeat(2,minmax(58px,auto)); gap:7px; margin-top:11px; }
+.greek-keyboard button { min-height:44px; padding:5px 8px; border:2px solid #d8d0c1; border-bottom-width:4px; border-radius:10px; background:#fff; color:var(--ending-navy); cursor:pointer; font:700 24px "GFS Didot",Georgia,serif; transition:transform .1s ease,border-color .1s ease; }
+.greek-keyboard button:hover,.greek-keyboard button:focus-visible { border-color:#9fb7cf; transform:translateY(-1px); outline:none; }
+.greek-keyboard button:active { transform:translateY(2px); border-bottom-width:2px; }
+.greek-keyboard .keyboard-action { background:#edf2f7; font:700 18px "DM Sans",sans-serif; }
+.greek-keyboard .keyboard-clear { padding-inline:12px; font-size:12px; }
+.keyboard-shortcut-note { margin:9px 0 0; color:#667085; font-size:11px; }
+.keyboard-shortcut-note b { color:#315d8d; }
 .ending-practice-message { min-height:22px; margin:13px 0 0; color:#667085; font-size:13px; }
 .ending-practice-message.success { color:#28775a; }
 .ending-practice-message.error { color:#a9473d; }
@@ -254,4 +266,7 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
   .ending-practice-actions { display:grid; grid-template-columns:1fr 1fr; }
   .ending-practice-actions button { min-width:0; }
   .ending-complete { align-items:stretch; flex-direction:column; }
+  .greek-keyboard-copy { align-items:flex-start; flex-direction:column; gap:4px; }
+  .greek-keyboard-copy span { text-align:left; }
+  .greek-keyboard { grid-template-columns:repeat(5,minmax(42px,1fr)); }
 }

@@ -27,6 +27,7 @@ const typePractice = document.querySelector('#type-practice');
 const bank = document.querySelector('#ending-bank');
 const orderList = document.querySelector('#order-list');
 const typeList = document.querySelector('#type-list');
+const greekKeyboard = document.querySelector('#greek-keyboard');
 const count = document.querySelector('#practice-count');
 const kicker = document.querySelector('#practice-kicker');
 const title = document.querySelector('#practice-title');
@@ -45,6 +46,18 @@ let checking = false;
 let locked = false;
 let pendingTimer = null;
 let fireworksTimer = null;
+let activeInput = null;
+
+const latinAliases = {
+  'nom-singular': ['os'],
+  'gen-singular': ['ou'],
+  'dat-singular': ['w', 'wi'],
+  'acc-singular': ['on'],
+  'nom-plural': ['oi'],
+  'gen-plural': ['wn'],
+  'dat-plural': ['ois'],
+  'acc-plural': ['ous'],
+};
 
 function shuffle(values) {
   const copy = [...values];
@@ -203,6 +216,8 @@ function renderTyping(roundMessage = '') {
     const visibleEnding = isFinal ? '' : ` · <b>${item.ending}</b>`;
     row.innerHTML = `<span><small>${item.group}</small><strong>${item.caseName}${visibleEnding}</strong></span><input type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Type the ${item.caseName} ${item.group.toLowerCase()} ending" placeholder="type ending" />`;
     const input = row.querySelector('input');
+    input.addEventListener('focus', () => { activeInput = input; });
+    input.addEventListener('pointerdown', () => { activeInput = input; });
     input.addEventListener('input', () => updateTypingRow(row, input, item, index));
     input.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
@@ -217,27 +232,36 @@ function renderTyping(roundMessage = '') {
   setMessage(roundMessage || (isFinal
     ? 'Final test: type each ending with no hint.'
     : `Round ${correctRounds + 1} of ${MASTERY_GOAL}: type each visible ending.`));
-  window.setTimeout(() => typeList.querySelector('input')?.focus(), 0);
+  activeInput = typeList.querySelector('input');
+  window.setTimeout(() => activeInput?.focus(), 0);
 }
 
 function normalizeEnding(value) {
   return String(value || '').trim().replace(/^[-‐‑‒–—−]\s*/, '').normalize('NFC');
 }
 
+function endingAnswerMatches(value, item) {
+  const answer = normalizeEnding(value).toLowerCase();
+  const expected = normalizeEnding(item.ending);
+  if (answer === expected) return true;
+  if (item.id === 'dat-singular' && answer === 'ωι') return true;
+  return latinAliases[item.id]?.includes(answer) || false;
+}
+
 function nextIncorrectInput(currentIndex = -1) {
   const inputs = [...typeList.querySelectorAll('input')];
   for (let index = currentIndex + 1; index < inputs.length; index += 1) {
-    if (normalizeEnding(inputs[index].value) !== normalizeEnding(items[index].ending)) return inputs[index];
+    if (!endingAnswerMatches(inputs[index].value, items[index])) return inputs[index];
   }
   for (let index = 0; index <= currentIndex; index += 1) {
-    if (normalizeEnding(inputs[index].value) !== normalizeEnding(items[index].ending)) return inputs[index];
+    if (!endingAnswerMatches(inputs[index].value, items[index])) return inputs[index];
   }
   return null;
 }
 
 function updateTypingRow(row, input, item, index) {
   if (checking || locked) return;
-  const correct = normalizeEnding(input.value) === normalizeEnding(item.ending);
+  const correct = endingAnswerMatches(input.value, item);
   row.classList.toggle('correct', correct);
   row.classList.remove('wrong');
   const inputs = [...typeList.querySelectorAll('input')];
@@ -278,7 +302,7 @@ function checkTyping() {
   }
   const results = rows.map((row, index) => {
     const input = row.querySelector('input');
-    const correct = normalizeEnding(input.value) === normalizeEnding(items[index].ending);
+    const correct = endingAnswerMatches(input.value, items[index]);
     row.classList.toggle('correct', correct);
     row.classList.toggle('wrong', !correct);
     return correct;
@@ -387,6 +411,33 @@ function resetPractice() {
   if (step === 'order') renderOrder();
   else renderTyping();
 }
+
+function updateInputFromKeypad(value) {
+  if (!activeInput || locked || checking) return;
+  activeInput.value = value;
+  activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+  activeInput.focus();
+}
+
+greekKeyboard?.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('button')) event.preventDefault();
+});
+
+greekKeyboard?.addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button || !activeInput) return;
+  const greekKey = button.dataset.greekKey;
+  const action = button.dataset.keyboardAction;
+  if (greekKey) {
+    updateInputFromKeypad(`${activeInput.value}${greekKey}`);
+    return;
+  }
+  if (action === 'backspace') {
+    updateInputFromKeypad(Array.from(activeInput.value).slice(0, -1).join(''));
+  } else if (action === 'clear') {
+    updateInputFromKeypad('');
+  }
+});
 
 if (step === 'order') {
   kicker.textContent = 'Step 1 · Ending order';
