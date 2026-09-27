@@ -156,13 +156,14 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 
 /* Second-declension masculine practice */
 .masculine-menu-page,.masculine-practice-page { --ending-navy:#293a5d; --ending-blue:#5b8fc9; --ending-green:#3e9b77; }
-.masculine-menu { width:min(870px,100%); margin:auto 0; padding:42px 0 50px; }
+.masculine-menu { width:min(1040px,100%); margin:auto 0; padding:42px 0 50px; }
 .masculine-menu h1 { margin-top:10px; color:var(--ending-navy); font-size:clamp(42px,5vw,62px); }
 .masculine-menu-intro { max-width:640px; margin:15px 0 0; color:#667085; font-size:16px; line-height:1.55; }
-.ending-step-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:28px; }
+.ending-step-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:28px; }
 .ending-step-card { display:grid; grid-template-columns:54px minmax(0,1fr); gap:14px; padding:20px; border:1px solid #e4dccb; border-radius:22px; background:#fffdf9; box-shadow:0 8px 0 #e6decd; }
 .ending-step-icon { display:grid; width:50px; height:50px; place-items:center; border-radius:15px; background:var(--ending-green); color:#fff; font:700 15px Georgia,serif; transform:rotate(-2deg); }
 .ending-type-card .ending-step-icon { background:var(--ending-blue); font-size:16px; }
+.ending-final-card .ending-step-icon { background:#de6d5f; font-size:21px; }
 .ending-step-copy h2 { margin:0 0 7px; color:var(--ending-navy); font:700 23px/1.03 Georgia,serif; }
 .ending-step-copy p { margin:0; color:#667085; font-size:13px; line-height:1.45; }
 .ending-mode-buttons { grid-column:1 / -1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:8px; }
@@ -209,7 +210,16 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .ending-complete strong { font:700 22px Georgia,serif; }
 .ending-complete span { color:#3c6f5a; font-size:13px; }
 .ending-complete a { padding:12px 15px; border-radius:10px; background:var(--ending-navy); color:#fff; text-align:center; text-decoration:none; font-weight:700; }
+.ending-complete.celebrate { animation:ending-celebrate .7s ease both; }
+@keyframes ending-celebrate {
+  0% { opacity:0; transform:translateY(10px) scale(.98); }
+  55% { transform:translateY(-3px) scale(1.01); box-shadow:0 0 0 7px rgba(91,143,201,.12); }
+  100% { opacity:1; transform:none; box-shadow:none; }
+}
 
+@media (max-width:920px) {
+  .ending-step-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 @media (max-width:700px) {
   .ending-step-grid { grid-template-columns:1fr; }
   .ending-practice-heading { align-items:flex-start; }

@@ -1,3 +1,5 @@
+const MASTERY_GOAL = 3;
+
 const endingSets = {
   singular: [
     { id: 'nom-singular', caseName: 'Nominative', group: 'Singular', ending: '-ος' },
@@ -14,7 +16,8 @@ const endingSets = {
 };
 
 const params = new URLSearchParams(window.location.search);
-const step = params.get('step') === 'type' ? 'type' : 'order';
+const requestedStep = params.get('step');
+const step = ['order', 'type', 'final'].includes(requestedStep) ? requestedStep : 'order';
 const requestedNumber = params.get('number');
 const number = ['singular', 'plural', 'both'].includes(requestedNumber) ? requestedNumber : 'singular';
 const items = number === 'both' ? [...endingSets.singular, ...endingSets.plural] : [...endingSets[number]];
@@ -33,8 +36,13 @@ const checkButton = document.querySelector('#check-practice');
 const resetButton = document.querySelector('#reset-practice');
 const completePanel = document.querySelector('#practice-complete');
 const completeMessage = document.querySelector('#complete-message');
+const nextPractice = document.querySelector('#next-practice');
 
 let placed = [];
+let correctRounds = 0;
+let checking = false;
+let locked = false;
+let pendingTimer = null;
 
 function shuffle(values) {
   const copy = [...values];
@@ -54,10 +62,15 @@ function updateCount(value) {
   count.textContent = `${value} / ${items.length}`;
 }
 
-function clearResult() {
-  message.textContent = '';
-  message.className = 'ending-practice-message';
+function setMessage(text, tone = '') {
+  message.textContent = text;
+  message.className = `ending-practice-message${tone ? ` ${tone}` : ''}`;
+}
+
+function clearRoundResult() {
   completePanel.hidden = true;
+  orderList.querySelectorAll('.ending-order-row').forEach((row) => row.classList.remove('correct', 'wrong'));
+  typeList.querySelectorAll('.ending-type-row').forEach((row) => row.classList.remove('correct', 'wrong'));
 }
 
 function makeDivider(item, previousItem) {
@@ -68,11 +81,13 @@ function makeDivider(item, previousItem) {
   return divider;
 }
 
-function renderOrder() {
+function renderOrder(roundMessage = '') {
+  checking = false;
+  locked = false;
   placed = Array(items.length).fill(null);
   bank.replaceChildren();
   orderList.replaceChildren();
-  clearResult();
+  clearRoundResult();
 
   shuffle(items).forEach((item) => {
     const button = document.createElement('button');
@@ -92,20 +107,20 @@ function renderOrder() {
     const row = document.createElement('div');
     row.className = 'ending-order-row';
     row.dataset.index = String(index);
-    row.innerHTML = `<span><small>${item.group}</small><strong>${item.caseName}</strong></span><button type="button" aria-label="${item.caseName} ending slot">Choose an ending</button>`;
+    row.innerHTML = `<span><small>${item.group}</small><strong>${item.caseName} · ${item.ending}</strong></span><button type="button" aria-label="${item.caseName} ending slot">Choose an ending</button>`;
     row.querySelector('button').addEventListener('click', () => returnEnding(index));
     orderList.append(row);
   });
 
   updateCount(0);
-  checkButton.textContent = 'Check order';
-  checkButton.disabled = true;
+  setMessage(roundMessage || `Round ${correctRounds + 1} of ${MASTERY_GOAL}: match the endings in order.`);
 }
 
 function placeEnding(item, button) {
+  if (checking || locked) return;
   const emptyIndex = placed.findIndex((entry) => entry === null);
   if (emptyIndex < 0) return;
-  clearResult();
+  orderList.querySelectorAll('.ending-order-row').forEach((row) => row.classList.remove('correct', 'wrong'));
   placed[emptyIndex] = item;
   button.disabled = true;
   button.classList.add('used');
@@ -113,14 +128,22 @@ function placeEnding(item, button) {
   slot.textContent = item.ending;
   slot.dataset.id = item.id;
   slot.classList.add('filled');
-  updateCount(placed.filter(Boolean).length);
-  checkButton.disabled = placed.some((entry) => entry === null);
+  const filledCount = placed.filter(Boolean).length;
+  updateCount(filledCount);
+
+  if (filledCount === items.length) {
+    checking = true;
+    setMessage(`Round ${correctRounds + 1} is filled. Checking…`);
+    pendingTimer = window.setTimeout(checkOrder, 180);
+  } else {
+    setMessage(`Round ${correctRounds + 1} of ${MASTERY_GOAL}: ${filledCount} / ${items.length} filled.`);
+  }
 }
 
 function returnEnding(index) {
+  if (checking || locked) return;
   const item = placed[index];
   if (!item) return;
-  clearResult();
   placed[index] = null;
   const slot = orderList.querySelector(`[data-index="${index}"] button`);
   slot.textContent = 'Choose an ending';
@@ -130,44 +153,68 @@ function returnEnding(index) {
   bankButton.disabled = false;
   bankButton.classList.remove('used');
   orderList.querySelectorAll('.ending-order-row').forEach((row) => row.classList.remove('correct', 'wrong'));
-  updateCount(placed.filter(Boolean).length);
-  checkButton.disabled = true;
+  const filledCount = placed.filter(Boolean).length;
+  updateCount(filledCount);
+  setMessage(`Round ${correctRounds + 1} of ${MASTERY_GOAL}: ${filledCount} / ${items.length} filled.`);
 }
 
 function checkOrder() {
+  pendingTimer = null;
+  checking = false;
   const results = placed.map((item, index) => item?.id === items[index].id);
   orderList.querySelectorAll('.ending-order-row').forEach((row, index) => {
     row.classList.toggle('correct', results[index]);
     row.classList.toggle('wrong', !results[index]);
   });
+
   if (results.every(Boolean)) {
-    finishPractice(`You put all ${items.length} ${groupLabel(number).toLowerCase()} endings in order.`);
-  } else {
-    message.textContent = 'A few endings are out of order. Tap a filled line to return an ending, then try again.';
-    message.className = 'ending-practice-message error';
+    correctRounds += 1;
+    locked = true;
+    if (correctRounds < MASTERY_GOAL) {
+      setMessage(`Perfect round ${correctRounds}! The board will clear by itself.`, 'success');
+      pendingTimer = window.setTimeout(
+        () => renderOrder(`Good. Round ${correctRounds + 1} of ${MASTERY_GOAL}: do it again.`),
+        correctRounds === 1 ? 850 : 1150,
+      );
+      return;
+    }
+    finishPractice(`You matched the ${groupLabel(number).toLowerCase()} endings in order three times.`);
+    return;
   }
+
+  setMessage('A few endings are out of order. Tap a filled line to return an ending, then try again.', 'error');
 }
 
-function renderTyping() {
+function renderTyping(roundMessage = '') {
+  checking = false;
+  locked = false;
   typeList.replaceChildren();
-  clearResult();
+  clearRoundResult();
+  const isFinal = step === 'final';
+
   items.forEach((item, index) => {
     const divider = makeDivider(item, items[index - 1]);
     if (divider) typeList.append(divider);
 
     const row = document.createElement('label');
     row.className = 'ending-type-row';
-    row.innerHTML = `<span><small>${item.group}</small><strong>${item.caseName} · <b>${item.ending}</b></strong></span><input type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Type the ${item.caseName} ${item.group.toLowerCase()} ending" placeholder="type ending" />`;
+    const visibleEnding = isFinal ? '' : ` · <b>${item.ending}</b>`;
+    row.innerHTML = `<span><small>${item.group}</small><strong>${item.caseName}${visibleEnding}</strong></span><input type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Type the ${item.caseName} ${item.group.toLowerCase()} ending" placeholder="type ending" />`;
     const input = row.querySelector('input');
     input.addEventListener('input', () => updateTypingRow(row, input, item, index));
     input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') checkTyping();
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      checkTyping();
     });
     typeList.append(row);
   });
+
   updateCount(0);
-  checkButton.textContent = 'Check answers';
   checkButton.disabled = true;
+  setMessage(roundMessage || (isFinal
+    ? 'Final test: type each ending with no hint.'
+    : `Round ${correctRounds + 1} of ${MASTERY_GOAL}: type each visible ending.`));
   window.setTimeout(() => typeList.querySelector('input')?.focus(), 0);
 }
 
@@ -175,8 +222,19 @@ function normalizeEnding(value) {
   return String(value || '').trim().replace(/^[-‐‑‒–—−]\s*/, '').normalize('NFC');
 }
 
+function nextIncorrectInput(currentIndex = -1) {
+  const inputs = [...typeList.querySelectorAll('input')];
+  for (let index = currentIndex + 1; index < inputs.length; index += 1) {
+    if (normalizeEnding(inputs[index].value) !== normalizeEnding(items[index].ending)) return inputs[index];
+  }
+  for (let index = 0; index <= currentIndex; index += 1) {
+    if (normalizeEnding(inputs[index].value) !== normalizeEnding(items[index].ending)) return inputs[index];
+  }
+  return null;
+}
+
 function updateTypingRow(row, input, item, index) {
-  clearResult();
+  if (checking || locked) return;
   const correct = normalizeEnding(input.value) === normalizeEnding(item.ending);
   row.classList.toggle('correct', correct);
   row.classList.remove('wrong');
@@ -184,11 +242,38 @@ function updateTypingRow(row, input, item, index) {
   const filled = inputs.filter((field) => field.value.trim()).length;
   updateCount(filled);
   checkButton.disabled = filled !== items.length;
-  if (correct && inputs[index + 1]) inputs[index + 1].focus();
+
+  if (!correct) {
+    setMessage(step === 'final'
+      ? 'Final test: type each ending with no hint.'
+      : `Round ${correctRounds + 1} of ${MASTERY_GOAL}: ${filled} / ${items.length} typed.`);
+    return;
+  }
+
+  const nextInput = nextIncorrectInput(index);
+  if (nextInput) {
+    setMessage(`Correct. Next: ${items[inputs.indexOf(nextInput)].caseName}.`, 'success');
+    window.setTimeout(() => nextInput.focus(), 70);
+    return;
+  }
+
+  checking = true;
+  setMessage('All endings correct! Checking…', 'success');
+  pendingTimer = window.setTimeout(checkTyping, 220);
 }
 
 function checkTyping() {
+  if (locked) return;
+  if (pendingTimer) window.clearTimeout(pendingTimer);
+  pendingTimer = null;
+  checking = false;
   const rows = [...typeList.querySelectorAll('.ending-type-row')];
+  const firstBlankRow = rows.find((row) => !row.querySelector('input').value.trim());
+  if (firstBlankRow) {
+    setMessage('Finish every line before checking.', 'error');
+    firstBlankRow.querySelector('input').focus();
+    return;
+  }
   const results = rows.map((row, index) => {
     const input = row.querySelector('input');
     const correct = normalizeEnding(input.value) === normalizeEnding(items[index].ending);
@@ -196,20 +281,51 @@ function checkTyping() {
     row.classList.toggle('wrong', !correct);
     return correct;
   });
+
   if (results.every(Boolean)) {
-    finishPractice(`You typed all ${items.length} ${groupLabel(number).toLowerCase()} endings correctly.`);
-  } else {
-    message.textContent = 'Some endings need another look. Correct the red lines and check again.';
-    message.className = 'ending-practice-message error';
-    rows[results.findIndex((result) => !result)]?.querySelector('input')?.focus();
+    locked = true;
+    if (step === 'final') {
+      finishPractice(`You typed all ${items.length} ${groupLabel(number).toLowerCase()} endings without visible hints.`);
+      return;
+    }
+
+    correctRounds += 1;
+    if (correctRounds < MASTERY_GOAL) {
+      setMessage(`Perfect typing round ${correctRounds}! The board will clear by itself.`, 'success');
+      pendingTimer = window.setTimeout(
+        () => renderTyping(`Good. Round ${correctRounds + 1} of ${MASTERY_GOAL}: type them again.`),
+        correctRounds === 1 ? 850 : 1150,
+      );
+      return;
+    }
+    finishPractice(`You typed the ${groupLabel(number).toLowerCase()} endings correctly three times.`);
+    return;
   }
+
+  setMessage('A few endings need fixing. Check the red rows and try again.', 'error');
+  rows[results.findIndex((result) => !result)]?.querySelector('input')?.focus();
 }
 
 function finishPractice(text) {
-  message.textContent = 'Perfect!';
-  message.className = 'ending-practice-message success';
+  locked = true;
+  checking = false;
+  setMessage(step === 'final' ? 'Final test complete!' : 'Three perfect rounds!', 'success');
   completeMessage.textContent = text;
   completePanel.hidden = false;
+  completePanel.classList.remove('celebrate');
+  window.requestAnimationFrame(() => completePanel.classList.add('celebrate'));
+
+  if (step === 'order') {
+    nextPractice.href = `second-masculine-practice.html?step=type&number=${number}`;
+    nextPractice.textContent = 'Continue to Step 2';
+  } else if (step === 'type') {
+    nextPractice.href = `second-masculine-practice.html?step=final&number=${number}`;
+    nextPractice.textContent = 'Continue to Final Test';
+  } else {
+    nextPractice.href = 'second-masculine-game.html';
+    nextPractice.textContent = 'Choose another practice';
+  }
+
   try {
     window.localStorage.setItem(`secondMasculine-${step}-${number}`, 'complete');
   } catch {
@@ -218,17 +334,33 @@ function finishPractice(text) {
 }
 
 function resetPractice() {
+  if (pendingTimer) window.clearTimeout(pendingTimer);
+  pendingTimer = null;
+  if (!completePanel.hidden) correctRounds = 0;
+  checking = false;
+  locked = false;
   if (step === 'order') renderOrder();
   else renderTyping();
 }
 
-kicker.textContent = step === 'order' ? 'Step 1 · Ending order' : 'Step 2 · Type it yourself';
-title.textContent = `${groupLabel(number)} endings`;
-directions.textContent = step === 'order'
-  ? 'Choose endings from the bank to fill the cases in order. Tap a filled line to return it.'
-  : 'Copy each visible ending into its box. You may type the leading dash or leave it out.';
+if (step === 'order') {
+  kicker.textContent = 'Step 1 · Ending order';
+  title.textContent = `${groupLabel(number)} endings`;
+  directions.textContent = 'Choose endings from the shuffled bank. The board checks itself when every line is filled.';
+} else if (step === 'type') {
+  kicker.textContent = 'Step 2 · Type it yourself';
+  title.textContent = `${groupLabel(number)} endings`;
+  directions.textContent = 'Copy each visible ending into its box. Complete three perfect rounds to master it.';
+} else {
+  kicker.textContent = 'Step 3 · Final test';
+  title.textContent = `${groupLabel(number)} final test`;
+  directions.textContent = 'Type each ending from memory. No ending hints are shown.';
+}
+
 orderPractice.hidden = step !== 'order';
-typePractice.hidden = step !== 'type';
-checkButton.addEventListener('click', step === 'order' ? checkOrder : checkTyping);
+typePractice.hidden = step === 'order';
+checkButton.hidden = step === 'order';
+checkButton.textContent = step === 'final' ? 'Check final test' : 'Check answers';
+checkButton.addEventListener('click', checkTyping);
 resetButton.addEventListener('click', resetPractice);
 resetPractice();
