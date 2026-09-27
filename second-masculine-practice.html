@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>2nd Masculine Practice · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="activity-nav.js" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell masculine-practice-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="second-masculine-game.html">← 2nd Masculine</a>
+      </header>
+
+      <section class="ending-practice" aria-labelledby="practice-title">
+        <div class="ending-practice-heading">
+          <div>
+            <p id="practice-kicker" class="pairs-kicker">Step 1 · Ending order</p>
+            <h1 id="practice-title">Singular endings</h1>
+            <p id="practice-directions">Choose endings from the bank to fill the cases in order.</p>
+          </div>
+          <span id="practice-count" class="ending-count">0 / 4</span>
+        </div>
+
+        <div id="order-practice" class="order-practice" hidden>
+          <div id="ending-bank" class="ending-bank" aria-label="Ending bank"></div>
+          <div id="order-list" class="ending-order-list" aria-label="Cases in order"></div>
+        </div>
+
+        <div id="type-practice" class="type-practice" hidden>
+          <div id="type-list" class="ending-type-list" aria-label="Type the endings"></div>
+        </div>
+
+        <p id="practice-message" class="ending-practice-message" role="status" aria-live="polite"></p>
+        <div class="ending-practice-actions">
+          <button id="reset-practice" class="ending-secondary-button" type="button">Reset</button>
+          <button id="check-practice" class="ending-primary-button" type="button">Check order</button>
+        </div>
+
+        <div id="practice-complete" class="ending-complete" hidden>
+          <div>
+            <strong>Excellent work!</strong>
+            <span id="complete-message">You completed this practice.</span>
+          </div>
+          <a href="second-masculine-game.html">Choose another practice</a>
+        </div>
+      </section>
+    </main>
+    <script src="second-masculine-practice.js"></script>
+  </body>
+</html>

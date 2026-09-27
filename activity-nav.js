@@ -8,6 +8,7 @@ else if (currentPage.startsWith('forms')) activeActivity = 'forms';
 else if (currentPage.startsWith('audio-quiz') || currentPage === 'audio' || currentPage === 'audio.html') activeActivity = 'audio';
 else if (currentPage.startsWith('learn-sounds') || currentPage.startsWith('soundboard')) activeActivity = 'learn';
 else if (currentPage.startsWith('vocabulary')) activeActivity = 'vocabulary';
+else if (currentPage.startsWith('second-masculine')) activeActivity = 'vocabulary';
 else if (currentPage.startsWith('match')) {
   activeActivity = query.get('case') === 'capital' ? 'capital' : query.get('case') === 'forms' ? 'forms' : 'minuscule';
 }
