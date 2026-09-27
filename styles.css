@@ -216,6 +216,26 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
   55% { transform:translateY(-3px) scale(1.01); box-shadow:0 0 0 7px rgba(91,143,201,.12); }
   100% { opacity:1; transform:none; box-shadow:none; }
 }
+.fireworks { position:fixed; z-index:200; inset:0; overflow:hidden; pointer-events:none; visibility:hidden; }
+.fireworks.active { visibility:visible; }
+.firework-burst { position:absolute; left:var(--burst-x); top:var(--burst-y); width:1px; height:1px; }
+.firework-burst::before { content:""; position:absolute; left:-2px; top:-2px; width:5px; height:5px; border-radius:50%; background:#fff; box-shadow:0 0 14px 5px rgba(255,255,255,.7); opacity:0; animation:firework-flash 1.25s ease-out var(--burst-delay) both; }
+.firework-spark { position:absolute; left:-2px; top:-6px; width:4px; height:12px; border-radius:999px; background:var(--spark-color); box-shadow:0 0 7px 1px color-mix(in srgb,var(--spark-color) 78%,transparent); opacity:0; animation:firework-spark 1.35s cubic-bezier(.12,.62,.2,1) var(--burst-delay) both; }
+@keyframes firework-flash {
+  0%,8% { opacity:0; transform:scale(.1); }
+  12% { opacity:1; transform:scale(1.5); }
+  36%,100% { opacity:0; transform:scale(3.2); }
+}
+@keyframes firework-spark {
+  0%,8% { opacity:0; transform:translate(0,45px) rotate(var(--spark-angle)) scale(.2); }
+  12% { opacity:1; transform:translate(0,0) rotate(var(--spark-angle)) scale(.65); }
+  70% { opacity:1; transform:translate(var(--spark-x),var(--spark-y)) rotate(var(--spark-angle)) scale(1); }
+  100% { opacity:0; transform:translate(var(--spark-x),calc(var(--spark-y) + 22px)) rotate(var(--spark-angle)) scale(.25); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .fireworks { display:none; }
+  .ending-complete.celebrate { animation:none; }
+}
 
 @media (max-width:920px) {
   .ending-step-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }

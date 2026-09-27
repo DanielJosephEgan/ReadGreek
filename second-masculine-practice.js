@@ -37,12 +37,14 @@ const resetButton = document.querySelector('#reset-practice');
 const completePanel = document.querySelector('#practice-complete');
 const completeMessage = document.querySelector('#complete-message');
 const nextPractice = document.querySelector('#next-practice');
+const fireworks = document.querySelector('#fireworks');
 
 let placed = [];
 let correctRounds = 0;
 let checking = false;
 let locked = false;
 let pendingTimer = null;
+let fireworksTimer = null;
 
 function shuffle(values) {
   const copy = [...values];
@@ -314,6 +316,7 @@ function finishPractice(text) {
   completePanel.hidden = false;
   completePanel.classList.remove('celebrate');
   window.requestAnimationFrame(() => completePanel.classList.add('celebrate'));
+  if (step !== 'final' && correctRounds === MASTERY_GOAL) launchFireworks();
 
   if (step === 'order') {
     nextPractice.href = `second-masculine-practice.html?step=type&number=${number}`;
@@ -331,6 +334,48 @@ function finishPractice(text) {
   } catch {
     // Practice remains fully usable when saved progress is unavailable.
   }
+}
+
+function launchFireworks() {
+  if (!fireworks) return;
+  if (fireworksTimer) window.clearTimeout(fireworksTimer);
+  const colors = ['#ec7d67', '#f5c75e', '#5b8fc9', '#3e9b77', '#ffffff'];
+  const bursts = [
+    { x: 18, y: 28, delay: 0 },
+    { x: 48, y: 20, delay: 240 },
+    { x: 78, y: 31, delay: 480 },
+    { x: 32, y: 47, delay: 760 },
+    { x: 68, y: 50, delay: 980 },
+  ];
+
+  fireworks.replaceChildren(...bursts.map((burst, burstIndex) => {
+    const element = document.createElement('span');
+    element.className = 'firework-burst';
+    element.style.setProperty('--burst-x', `${burst.x}%`);
+    element.style.setProperty('--burst-y', `${burst.y}%`);
+    element.style.setProperty('--burst-delay', `${burst.delay}ms`);
+
+    for (let sparkIndex = 0; sparkIndex < 16; sparkIndex += 1) {
+      const angle = (Math.PI * 2 * sparkIndex) / 16;
+      const distance = 58 + ((sparkIndex + burstIndex) % 4) * 13;
+      const spark = document.createElement('i');
+      spark.className = 'firework-spark';
+      spark.style.setProperty('--spark-x', `${Math.cos(angle) * distance}px`);
+      spark.style.setProperty('--spark-y', `${Math.sin(angle) * distance}px`);
+      spark.style.setProperty('--spark-angle', `${(sparkIndex * 360) / 16 + 90}deg`);
+      spark.style.setProperty('--spark-color', colors[(sparkIndex + burstIndex) % colors.length]);
+      element.append(spark);
+    }
+    return element;
+  }));
+
+  fireworks.classList.remove('active');
+  window.requestAnimationFrame(() => fireworks.classList.add('active'));
+  fireworksTimer = window.setTimeout(() => {
+    fireworks.classList.remove('active');
+    fireworks.replaceChildren();
+    fireworksTimer = null;
+  }, 2600);
 }
 
 function resetPractice() {
