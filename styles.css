@@ -81,9 +81,10 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .vocabulary-card-copy strong { display:block; margin-top:9px; color:#946519; font-size:13px; }
 .vocabulary-play-button { display:block; margin-top:22px; padding:17px 20px; border-radius:15px; background:#293a5d; box-shadow:0 6px 0 #1d2b48; color:#fff; text-align:center; text-decoration:none; font:700 18px Georgia,serif; transition:transform .14s ease,box-shadow .14s ease; }
 .vocabulary-play-button:hover,.vocabulary-play-button:focus-visible { transform:translateY(-2px); box-shadow:0 8px 0 #1d2b48; outline:3px solid rgba(91,143,201,.3); outline-offset:2px; }
-.home-study-cards { display:grid; grid-template-columns:repeat(2,minmax(0,440px)); gap:20px; margin-top:28px; scroll-margin-top:225px; }
+.home-study-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; margin-top:28px; scroll-margin-top:225px; }
 .home-vocabulary-card { margin-top:0; }
 .ending-card-icon { font:400 28px "GFS Didot",Georgia,serif; }
+.class5-card-icon { background:#3e9b77; }
 
 .vocabulary-challenge-page { --pair-navy:#293a5d; --pair-gold:#c8912f; --pair-green:#28775a; width:min(1180px,100%); }
 .pairs-challenge { width:min(1000px,100%); margin:auto 0; padding:34px 0 50px; }
@@ -136,6 +137,9 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .pair-completion button:hover { background:#1d2b48; }
 @keyframes pair-nudge { 50% { transform:translateX(5px); } }
 
+@media (max-width:980px) {
+  .home-study-cards { grid-template-columns:repeat(2,minmax(0,440px)); }
+}
 @media (max-width:780px) {
   .home-study-cards { grid-template-columns:minmax(0,440px); }
   .pairs-intro { align-items:flex-start; flex-direction:column; }
