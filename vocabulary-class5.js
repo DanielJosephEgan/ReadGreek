@@ -30,6 +30,9 @@ const averageLabel = document.querySelector('#average-time');
 const speedStatus = document.querySelector('#speed-status');
 const speedNeedle = document.querySelector('#speed-needle');
 const completionTime = document.querySelector('#completion-time');
+const pronunciationAudio = new Audio();
+const pronunciationButtons = [...document.querySelectorAll('.pronunciation-sample')];
+const pronunciationStatus = document.querySelector('#pronunciation-status');
 let selectedGreek = null;
 let selectedEnglish = null;
 let matched = 0;
@@ -37,6 +40,50 @@ let checking = false;
 let startedAt = 0;
 let elapsed = 0;
 let timer = null;
+let activePronunciationButton = null;
+let pronunciationRequest = 0;
+
+function resetPronunciationButton() {
+  if (!activePronunciationButton) return;
+  activePronunciationButton.classList.remove('playing');
+  activePronunciationButton.querySelector('.pronunciation-play').textContent = '▶';
+  activePronunciationButton = null;
+}
+
+async function playPronunciation(button) {
+  const request = pronunciationRequest + 1;
+  pronunciationRequest = request;
+  pronunciationAudio.pause();
+  pronunciationAudio.currentTime = 0;
+  resetPronunciationButton();
+  activePronunciationButton = button;
+  button.classList.add('playing');
+  button.querySelector('.pronunciation-play').textContent = '■';
+  pronunciationAudio.src = button.dataset.audio;
+  pronunciationStatus.textContent = `Playing ${button.dataset.word}.`;
+  try {
+    await pronunciationAudio.play();
+  } catch {
+    if (request !== pronunciationRequest) return;
+    resetPronunciationButton();
+    pronunciationStatus.textContent = 'The sample could not play. Please try again.';
+  }
+}
+
+pronunciationButtons.forEach((button) => {
+  button.addEventListener('click', () => playPronunciation(button));
+});
+
+pronunciationAudio.addEventListener('ended', () => {
+  const word = activePronunciationButton?.dataset.word;
+  resetPronunciationButton();
+  pronunciationStatus.textContent = word ? `Finished ${word}. Choose another word to compare.` : 'Choose a word to hear it.';
+});
+
+pronunciationAudio.addEventListener('error', () => {
+  resetPronunciationButton();
+  pronunciationStatus.textContent = 'The sample could not load. Please try again.';
+});
 
 function makeOption(item, side) {
   const button = document.createElement('button');
