@@ -132,6 +132,9 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .pair-options { display:grid; gap:6px; }
 .pair-card { min-height:44px; padding:5px 14px; border:2px solid #dfd9cc; border-bottom-width:4px; border-radius:12px; background:#fff; color:var(--pair-navy); font-weight:700; line-height:1.15; cursor:pointer; transition:transform .12s ease,opacity .2s ease,border-color .12s ease; }
 .pair-card.greek-pair { font:700 22px "GFS Didot",Georgia,serif; }
+.pair-card.greek-pair { display:flex; align-items:center; justify-content:center; gap:9px; }
+.pair-audio-mark { display:inline-grid; width:22px; height:22px; border-radius:50%; place-items:center; background:#f7c451; color:#243557; font:700 9px/1 "DM Sans",sans-serif; transition:transform .12s ease,background .12s ease; }
+.pair-card.playing-audio .pair-audio-mark { background:#65b692; transform:scale(1.08); }
 .pair-card.english-pair { font-size:15px; }
 .pair-card.case-pair { font-size:14px; }
 .pair-card.ending-pair { font:700 23px "GFS Didot",Georgia,serif; }
