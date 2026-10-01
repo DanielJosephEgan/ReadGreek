@@ -30,7 +30,6 @@ const averageLabel = document.querySelector('#average-time');
 const speedStatus = document.querySelector('#speed-status');
 const speedNeedle = document.querySelector('#speed-needle');
 const completionTime = document.querySelector('#completion-time');
-const pronunciationAudio = new Audio();
 const pronunciationButtons = [...document.querySelectorAll('.pronunciation-sample')];
 const pronunciationStatus = document.querySelector('#pronunciation-status');
 let selectedGreek = null;
@@ -42,6 +41,7 @@ let elapsed = 0;
 let timer = null;
 let activePronunciationButton = null;
 let pronunciationRequest = 0;
+let pronunciationUtterance = null;
 
 function resetPronunciationButton() {
   if (!activePronunciationButton) return;
@@ -50,39 +50,42 @@ function resetPronunciationButton() {
   activePronunciationButton = null;
 }
 
-async function playPronunciation(button) {
+function playPronunciation(button) {
   const request = pronunciationRequest + 1;
   pronunciationRequest = request;
-  pronunciationAudio.pause();
-  pronunciationAudio.currentTime = 0;
+  window.speechSynthesis?.cancel();
   resetPronunciationButton();
   activePronunciationButton = button;
   button.classList.add('playing');
   button.querySelector('.pronunciation-play').textContent = '■';
-  pronunciationAudio.src = button.dataset.audio;
   pronunciationStatus.textContent = `Playing ${button.dataset.word}.`;
-  try {
-    await pronunciationAudio.play();
-  } catch {
+
+  if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+    resetPronunciationButton();
+    pronunciationStatus.textContent = 'This browser does not provide speech playback.';
+    return;
+  }
+
+  pronunciationUtterance = new SpeechSynthesisUtterance(button.dataset.say);
+  pronunciationUtterance.lang = 'en-US';
+  pronunciationUtterance.rate = 0.72;
+  pronunciationUtterance.pitch = 0.9;
+  pronunciationUtterance.onend = () => {
     if (request !== pronunciationRequest) return;
+    const word = button.dataset.word;
+    resetPronunciationButton();
+    pronunciationStatus.textContent = `Finished ${word}. Choose another word to compare.`;
+  };
+  pronunciationUtterance.onerror = (event) => {
+    if (request !== pronunciationRequest || event.error === 'interrupted' || event.error === 'canceled') return;
     resetPronunciationButton();
     pronunciationStatus.textContent = 'The sample could not play. Please try again.';
-  }
+  };
+  window.speechSynthesis.speak(pronunciationUtterance);
 }
 
 pronunciationButtons.forEach((button) => {
   button.addEventListener('click', () => playPronunciation(button));
-});
-
-pronunciationAudio.addEventListener('ended', () => {
-  const word = activePronunciationButton?.dataset.word;
-  resetPronunciationButton();
-  pronunciationStatus.textContent = word ? `Finished ${word}. Choose another word to compare.` : 'Choose a word to hear it.';
-});
-
-pronunciationAudio.addEventListener('error', () => {
-  resetPronunciationButton();
-  pronunciationStatus.textContent = 'The sample could not load. Please try again.';
 });
 
 function makeOption(item, side) {
