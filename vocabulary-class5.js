@@ -1,14 +1,14 @@
 const vocabulary = [
-  { id: 'logos', greek: 'λόγος', english: 'word' },
-  { id: 'antichristos', greek: 'ἀντίχριστος', english: 'antichrist' },
-  { id: 'thanatos', greek: 'θάνατος', english: 'death' },
-  { id: 'hina', greek: 'ἵνα', english: 'in order that; that' },
-  { id: 'alla', greek: 'ἀλλά', english: 'but; yet' },
-  { id: 'ek-ex', greek: 'ἐκ, ἐξ', english: 'Genitive: from; of' },
-  { id: 'en', greek: 'ἐν', english: 'Dative: in (on, among)' },
-  { id: 'me', match: 'negative', greek: 'μή', english: 'not' },
-  { id: 'ou', match: 'negative', greek: 'οὐ, οὐκ, οὐχ', english: 'not' },
-  { id: 'estin', greek: 'ἐστιν', english: 'he, she, it is' },
+  { id: 'logos', greek: 'λόγος', english: 'word', audio: 'VocabularySounds/Class5/logos.wav' },
+  { id: 'antichristos', greek: 'ἀντίχριστος', english: 'antichrist', audio: 'VocabularySounds/Class5/antichristos.wav' },
+  { id: 'thanatos', greek: 'θάνατος', english: 'death', audio: 'VocabularySounds/Class5/thanatos.wav' },
+  { id: 'hina', greek: 'ἵνα', english: 'in order that; that', audio: 'VocabularySounds/Class5/hina.wav' },
+  { id: 'alla', greek: 'ἀλλά', english: 'but; yet', audio: 'VocabularySounds/Class5/alla.wav' },
+  { id: 'ek-ex', greek: 'ἐκ, ἐξ', english: 'Genitive: from; of', audio: 'VocabularySounds/Class5/ek-ex.wav' },
+  { id: 'en', greek: 'ἐν', english: 'Dative: in (on, among)', audio: 'VocabularySounds/Class5/en.wav' },
+  { id: 'me', match: 'negative', greek: 'μή', english: 'not', audio: 'VocabularySounds/Class5/me.wav' },
+  { id: 'ou', match: 'negative', greek: 'οὐ, οὐκ, οὐχ', english: 'not', audio: 'VocabularySounds/Class5/ou.wav' },
+  { id: 'estin', greek: 'ἐστιν', english: 'he, she, it is', audio: 'VocabularySounds/Class5/estin.wav' },
 ];
 
 const shuffle = (items) => {
@@ -30,8 +30,6 @@ const averageLabel = document.querySelector('#average-time');
 const speedStatus = document.querySelector('#speed-status');
 const speedNeedle = document.querySelector('#speed-needle');
 const completionTime = document.querySelector('#completion-time');
-const pronunciationButtons = [...document.querySelectorAll('.pronunciation-sample')];
-const pronunciationStatus = document.querySelector('#pronunciation-status');
 let selectedGreek = null;
 let selectedEnglish = null;
 let matched = 0;
@@ -39,63 +37,67 @@ let checking = false;
 let startedAt = 0;
 let elapsed = 0;
 let timer = null;
-let activePronunciationButton = null;
-let pronunciationRequest = 0;
-let pronunciationUtterance = null;
+let activeAudio = null;
+let activeAudioButton = null;
 
-function resetPronunciationButton() {
-  if (!activePronunciationButton) return;
-  activePronunciationButton.classList.remove('playing');
-  activePronunciationButton.querySelector('.pronunciation-play').textContent = '▶';
-  activePronunciationButton = null;
-}
-
-function playPronunciation(button) {
-  const request = pronunciationRequest + 1;
-  pronunciationRequest = request;
-  window.speechSynthesis?.cancel();
-  resetPronunciationButton();
-  activePronunciationButton = button;
-  button.classList.add('playing');
-  button.querySelector('.pronunciation-play').textContent = '■';
-  pronunciationStatus.textContent = `Playing ${button.dataset.word}.`;
-
-  if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
-    resetPronunciationButton();
-    pronunciationStatus.textContent = 'This browser does not provide speech playback.';
-    return;
+function resetAudioPlayback() {
+  if (activeAudioButton) {
+    activeAudioButton.classList.remove('playing-audio');
+    const marker = activeAudioButton.querySelector('.pair-audio-mark');
+    if (marker) marker.textContent = '▶';
   }
-
-  pronunciationUtterance = new SpeechSynthesisUtterance(button.dataset.say);
-  pronunciationUtterance.lang = 'en-US';
-  pronunciationUtterance.rate = 0.72;
-  pronunciationUtterance.pitch = 0.9;
-  pronunciationUtterance.onend = () => {
-    if (request !== pronunciationRequest) return;
-    const word = button.dataset.word;
-    resetPronunciationButton();
-    pronunciationStatus.textContent = `Finished ${word}. Choose another word to compare.`;
-  };
-  pronunciationUtterance.onerror = (event) => {
-    if (request !== pronunciationRequest || event.error === 'interrupted' || event.error === 'canceled') return;
-    resetPronunciationButton();
-    pronunciationStatus.textContent = 'The sample could not play. Please try again.';
-  };
-  window.speechSynthesis.speak(pronunciationUtterance);
+  activeAudio = null;
+  activeAudioButton = null;
 }
 
-pronunciationButtons.forEach((button) => {
-  button.addEventListener('click', () => playPronunciation(button));
-});
+function playVocabularyAudio(item, button) {
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio.currentTime = 0;
+  }
+  resetAudioPlayback();
+
+  const audio = new Audio(item.audio);
+  activeAudio = audio;
+  activeAudioButton = button;
+  button.classList.add('playing-audio');
+  button.querySelector('.pair-audio-mark').textContent = '■';
+
+  audio.addEventListener('ended', resetAudioPlayback, { once: true });
+  audio.addEventListener('error', () => {
+    resetAudioPlayback();
+    message.textContent = 'That recording could not play. Please try again.';
+    message.className = 'pair-message error';
+  }, { once: true });
+  audio.play().catch(() => {
+    resetAudioPlayback();
+    message.textContent = 'Select the Greek word again to hear its recording.';
+    message.className = 'pair-message error';
+  });
+}
 
 function makeOption(item, side) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = `pair-card ${side === 'greek' ? 'greek-pair' : 'english-pair'}`;
   button.dataset.match = item.match || item.id;
-  button.textContent = side === 'greek' ? item.greek : item.english;
-  button.setAttribute('aria-label', side === 'greek' ? `Greek word ${item.greek}` : `English meaning ${item.english}`);
-  button.addEventListener('click', () => chooseOption(button, side));
+  if (side === 'greek') {
+    const word = document.createElement('span');
+    word.textContent = item.greek;
+    const audioMarker = document.createElement('span');
+    audioMarker.className = 'pair-audio-mark';
+    audioMarker.setAttribute('aria-hidden', 'true');
+    audioMarker.textContent = '▶';
+    button.append(word, audioMarker);
+    button.setAttribute('aria-label', `Hear and select the Greek word ${item.greek}`);
+  } else {
+    button.textContent = item.english;
+    button.setAttribute('aria-label', `English meaning ${item.english}`);
+  }
+  button.addEventListener('click', () => {
+    if (side === 'greek' && !button.classList.contains('matched')) playVocabularyAudio(item, button);
+    chooseOption(button, side);
+  });
   return button;
 }
 
@@ -133,6 +135,8 @@ function stopTimer() {
 }
 
 function renderGame() {
+  if (activeAudio) activeAudio.pause();
+  resetAudioPlayback();
   if (timer) window.clearInterval(timer);
   greekOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'greek')));
   englishOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'english')));
