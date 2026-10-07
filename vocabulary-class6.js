@@ -1,15 +1,15 @@
 const vocabulary = [
-  { id: 'agapetos', greek: 'ἀγαπητός, -ή, -όν', english: 'beloved' },
-  { id: 'ophthalmos', greek: 'ὀφθαλμός, -οῦ, ὁ', english: 'eye' },
-  { id: 'teknon', greek: 'τέκνον, -ου, τό', english: 'child' },
-  { id: 'ergon', greek: 'ἔργον, -ου, τό', english: 'work' },
-  { id: 'gar', greek: 'γάρ', english: 'for (postpositive)' },
-  { id: 'eis', greek: 'εἰς', english: 'Accusative: into' },
-  { id: 'apo', greek: 'ἀπό, ἀπʼ, ἀφʼ', english: 'Genitive: from' },
-  { id: 'pros', greek: 'πρός', english: 'Accusative: to, toward, with' },
-  { id: 'pater', greek: 'πατήρ, πατρός, ὁ', english: 'father' },
-  { id: 'pneuma', greek: 'πνεῦμα, πνεύματος, τό', english: 'spirit' },
-  { id: 'onoma', greek: 'ὄνομα, ὀνόματος, τό', english: 'name' },
+  { id: 'agapetos', greek: 'ἀγαπητός, -ή, -όν', english: 'beloved', audio: 'VocabularySounds/Lesson6/agapetos.wav' },
+  { id: 'ophthalmos', greek: 'ὀφθαλμός, -οῦ, ὁ', english: 'eye', audio: 'VocabularySounds/Lesson6/ophthalmos.wav' },
+  { id: 'teknon', greek: 'τέκνον, -ου, τό', english: 'child', audio: 'VocabularySounds/Lesson6/teknon.wav' },
+  { id: 'ergon', greek: 'ἔργον, -ου, τό', english: 'work', audio: 'VocabularySounds/Lesson6/ergon.wav' },
+  { id: 'gar', greek: 'γάρ', english: 'for (postpositive)', audio: 'VocabularySounds/Lesson6/gar.wav' },
+  { id: 'eis', greek: 'εἰς', english: 'Accusative: into', audio: 'VocabularySounds/Lesson6/eis.wav' },
+  { id: 'apo', greek: 'ἀπό, ἀπʼ, ἀφʼ', english: 'Genitive: from', audio: 'VocabularySounds/Lesson6/apo.wav' },
+  { id: 'pros', greek: 'πρός', english: 'Accusative: to, toward, with', audio: 'VocabularySounds/Lesson6/pros.wav' },
+  { id: 'pater', greek: 'πατήρ, πατρός, ὁ', english: 'father', audio: 'VocabularySounds/Lesson6/pater.wav' },
+  { id: 'pneuma', greek: 'πνεῦμα, πνεύματος, τό', english: 'spirit', audio: 'VocabularySounds/Lesson6/pneuma.wav' },
+  { id: 'onoma', greek: 'ὄνομα, ὀνόματος, τό', english: 'name', audio: 'VocabularySounds/Lesson6/onoma.wav' },
 ];
 
 const shuffle = (items) => {
@@ -38,15 +38,67 @@ let checking = false;
 let startedAt = 0;
 let elapsed = 0;
 let timer = null;
+let activeAudio = null;
+let activeAudioButton = null;
+
+function resetAudioPlayback() {
+  if (activeAudioButton) {
+    activeAudioButton.classList.remove('playing-audio');
+    const marker = activeAudioButton.querySelector('.pair-audio-mark');
+    if (marker) marker.textContent = '▶';
+  }
+  activeAudio = null;
+  activeAudioButton = null;
+}
+
+function playVocabularyAudio(item, button) {
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio.currentTime = 0;
+  }
+  resetAudioPlayback();
+
+  const audio = new Audio(item.audio);
+  activeAudio = audio;
+  activeAudioButton = button;
+  button.classList.add('playing-audio');
+  button.querySelector('.pair-audio-mark').textContent = '■';
+
+  audio.addEventListener('ended', resetAudioPlayback, { once: true });
+  audio.addEventListener('error', () => {
+    resetAudioPlayback();
+    message.textContent = 'That recording could not play. Please try again.';
+    message.className = 'pair-message error';
+  }, { once: true });
+  audio.play().catch(() => {
+    resetAudioPlayback();
+    message.textContent = 'Select the Greek entry again to hear its recording.';
+    message.className = 'pair-message error';
+  });
+}
 
 function makeOption(item, side) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = `pair-card ${side === 'greek' ? 'greek-pair' : 'english-pair'}`;
   button.dataset.match = item.id;
-  button.textContent = side === 'greek' ? item.greek : item.english;
-  button.setAttribute('aria-label', side === 'greek' ? `Greek entry ${item.greek}` : `English meaning ${item.english}`);
-  button.addEventListener('click', () => chooseOption(button, side));
+  if (side === 'greek') {
+    const entry = document.createElement('span');
+    entry.textContent = item.greek;
+    const audioMarker = document.createElement('span');
+    audioMarker.className = 'pair-audio-mark';
+    audioMarker.setAttribute('aria-hidden', 'true');
+    audioMarker.textContent = '▶';
+    button.append(entry, audioMarker);
+    button.setAttribute('aria-label', `Hear and select the Greek entry ${item.greek}`);
+  } else {
+    button.textContent = item.english;
+    button.setAttribute('aria-label', `English meaning ${item.english}`);
+  }
+  button.addEventListener('click', () => {
+    if (side === 'greek' && !button.classList.contains('matched')) playVocabularyAudio(item, button);
+    chooseOption(button, side);
+  });
   return button;
 }
 
@@ -84,6 +136,8 @@ function stopTimer() {
 }
 
 function renderGame() {
+  if (activeAudio) activeAudio.pause();
+  resetAudioPlayback();
   if (timer) window.clearInterval(timer);
   greekOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'greek')));
   englishOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'english')));
