@@ -45,18 +45,44 @@ const lessons = {
       { greek: 'ὄνομα, ὀνόματος, τό', english: 'name', audio: 'VocabularySounds/Lesson6/onoma.wav' },
     ],
   },
+  7: {
+    title: 'Class 7 Vocabulary Practice',
+    audioPending: true,
+    entries: [
+      { greek: 'κύριος, -ου, ὁ', english: 'Lord (Kyrie)' },
+      { greek: 'οὐρανός, -ου, ὁ', english: 'heaven; sky (Uranus)' },
+      { greek: 'νόμος, -ου, ὁ', english: 'law (normal)' },
+      { greek: 'ἄγγελος, -ου, ὁ', english: 'angel (messenger)' },
+      { greek: 'ὄχλος, -ου, ὁ', english: 'crowd' },
+      { greek: 'δοῦλος, -ου, ὁ', english: 'slave (doula)' },
+      { greek: 'οἶκος, -ου, ὁ', english: 'house (OIKOS; Ikea)' },
+      { greek: 'εἰμί', english: 'I am' },
+      { greek: 'εἶ', english: 'you are' },
+      { greek: 'ἐστί(ν)', english: 'he, she, it is' },
+      { greek: 'ἐσμέν', english: 'we are' },
+      { greek: 'ἐστέ', english: "y'all are" },
+      { greek: 'εἰσί(ν)', english: 'they are' },
+    ],
+  },
 };
 
 const requestedLesson = new URLSearchParams(window.location.search).get('lesson');
 const lesson = lessons[requestedLesson] || lessons[4];
 const title = document.querySelector('#practice-title');
+const intro = document.querySelector('#practice-intro');
 const status = document.querySelector('#practice-status');
+const greekHeading = document.querySelector('#practice-greek-heading');
 const rows = document.querySelector('#practice-rows');
 let activeAudio = null;
 let activeButton = null;
 
 document.title = `${lesson.title} · φωνή`;
 title.textContent = lesson.title;
+if (lesson.audioPending) {
+  intro.textContent = 'Study each Greek entry beside its correct English meaning.';
+  status.textContent = 'Class 7 audio will be added after the recording is available.';
+  greekHeading.textContent = 'Greek entry';
+}
 
 function resetPlayback() {
   if (activeButton) {
@@ -99,10 +125,10 @@ lesson.entries.forEach((entry) => {
   const row = document.createElement('article');
   row.className = 'practice-row';
 
-  const greekButton = document.createElement('button');
-  greekButton.type = 'button';
-  greekButton.className = 'practice-greek';
-  greekButton.setAttribute('aria-label', `Play the recording for ${entry.greek}`);
+  const greekButton = document.createElement(entry.audio ? 'button' : 'div');
+  if (entry.audio) greekButton.type = 'button';
+  greekButton.className = `practice-greek${entry.audio ? '' : ' practice-greek-static'}`;
+  if (entry.audio) greekButton.setAttribute('aria-label', `Play the recording for ${entry.greek}`);
 
   const playMarker = document.createElement('span');
   playMarker.className = 'practice-play';
@@ -111,8 +137,12 @@ lesson.entries.forEach((entry) => {
 
   const greekText = document.createElement('span');
   greekText.textContent = entry.greek;
-  greekButton.append(playMarker, greekText);
-  greekButton.addEventListener('click', () => playEntry(entry, greekButton));
+  if (entry.audio) {
+    greekButton.append(playMarker, greekText);
+    greekButton.addEventListener('click', () => playEntry(entry, greekButton));
+  } else {
+    greekButton.append(greekText);
+  }
 
   const englishAnswer = document.createElement('div');
   englishAnswer.className = 'practice-answer';
