@@ -1,6 +1,10 @@
 const MASTERY_GOAL = 3;
+const declension = document.body.dataset.declension === 'neuter' ? 'neuter' : 'masculine';
+const practicePage = declension === 'neuter' ? 'second-neuter-practice.html' : 'second-masculine-practice.html';
+const menuPage = declension === 'neuter' ? 'second-neuter-game.html' : 'second-masculine-game.html';
+const storagePrefix = declension === 'neuter' ? 'secondNeuter' : 'secondMasculine';
 
-const endingSets = {
+const masculineEndingSets = {
   singular: [
     { id: 'nom-singular', caseName: 'Nominative', group: 'Singular', ending: '-ος' },
     { id: 'gen-singular', caseName: 'Genitive', group: 'Singular', ending: '-ου' },
@@ -14,6 +18,23 @@ const endingSets = {
     { id: 'acc-plural', caseName: 'Accusative', group: 'Plural', ending: '-ους' },
   ],
 };
+
+const neuterEndingSets = {
+  singular: [
+    { id: 'nom-singular', caseName: 'Nominative', group: 'Singular', ending: '-ον' },
+    { id: 'gen-singular', caseName: 'Genitive', group: 'Singular', ending: '-ου' },
+    { id: 'dat-singular', caseName: 'Dative', group: 'Singular', ending: '-ῳ' },
+    { id: 'acc-singular', caseName: 'Accusative', group: 'Singular', ending: '-ον' },
+  ],
+  plural: [
+    { id: 'nom-plural', caseName: 'Nominative', group: 'Plural', ending: '-α' },
+    { id: 'gen-plural', caseName: 'Genitive', group: 'Plural', ending: '-ων' },
+    { id: 'dat-plural', caseName: 'Dative', group: 'Plural', ending: '-οις' },
+    { id: 'acc-plural', caseName: 'Accusative', group: 'Plural', ending: '-α' },
+  ],
+};
+
+const endingSets = declension === 'neuter' ? neuterEndingSets : masculineEndingSets;
 
 const params = new URLSearchParams(window.location.search);
 const requestedStep = params.get('step');
@@ -48,7 +69,7 @@ let pendingTimer = null;
 let fireworksTimer = null;
 let activeInput = null;
 
-const latinAliases = {
+const masculineLatinAliases = {
   'nom-singular': ['os'],
   'gen-singular': ['ou'],
   'dat-singular': ['w', 'wi'],
@@ -58,6 +79,19 @@ const latinAliases = {
   'dat-plural': ['ois'],
   'acc-plural': ['ous'],
 };
+
+const neuterLatinAliases = {
+  'nom-singular': ['on'],
+  'gen-singular': ['ou'],
+  'dat-singular': ['w', 'wi'],
+  'acc-singular': ['on'],
+  'nom-plural': ['a'],
+  'gen-plural': ['wn'],
+  'dat-plural': ['ois'],
+  'acc-plural': ['a'],
+};
+
+const latinAliases = declension === 'neuter' ? neuterLatinAliases : masculineLatinAliases;
 
 function shuffle(values) {
   const copy = [...values];
@@ -176,7 +210,7 @@ function returnEnding(index) {
 function checkOrder() {
   pendingTimer = null;
   checking = false;
-  const results = placed.map((item, index) => item?.id === items[index].id);
+  const results = placed.map((item, index) => normalizeEnding(item?.ending) === normalizeEnding(items[index].ending));
   orderList.querySelectorAll('.ending-order-row').forEach((row, index) => {
     row.classList.toggle('correct', results[index]);
     row.classList.toggle('wrong', !results[index]);
@@ -343,18 +377,18 @@ function finishPractice(text) {
   if (step !== 'final' && correctRounds === MASTERY_GOAL) launchFireworks();
 
   if (step === 'order') {
-    nextPractice.href = `second-masculine-practice.html?step=type&number=${number}`;
+    nextPractice.href = `${practicePage}?step=type&number=${number}`;
     nextPractice.textContent = 'Continue to Step 2';
   } else if (step === 'type') {
-    nextPractice.href = `second-masculine-practice.html?step=final&number=${number}`;
+    nextPractice.href = `${practicePage}?step=final&number=${number}`;
     nextPractice.textContent = 'Continue to Final Test';
   } else {
-    nextPractice.href = 'second-masculine-game.html';
+    nextPractice.href = menuPage;
     nextPractice.textContent = 'Choose another practice';
   }
 
   try {
-    window.localStorage.setItem(`secondMasculine-${step}-${number}`, 'complete');
+    window.localStorage.setItem(`${storagePrefix}-${step}-${number}`, 'complete');
   } catch {
     // Practice remains fully usable when saved progress is unavailable.
   }
