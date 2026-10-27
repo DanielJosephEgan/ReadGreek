@@ -92,8 +92,11 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .class5-card-icon { background:#3e9b77; }
 .class6-card-icon { background:#c8912f; }
 .class7-card-icon { background:#8765aa; }
+.class8-card-icon { background:#bb6a55; }
+.verb-card-icon { background:#315d8d; font:700 17px "GFS Didot",Georgia,serif; }
 .class6-vocabulary-page .pair-card.greek-pair { font-size:19px; }
 .class7-vocabulary-page .pair-card.greek-pair { font-size:18px; }
+.class8-vocabulary-page .pair-card.greek-pair { font-size:18px; }
 
 /* Vocabulary practice */
 .vocabulary-practice-page { width:min(1120px,100%); }
@@ -216,7 +219,7 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 }
 
 /* Second-declension ending practice */
-.masculine-menu-page,.masculine-practice-page,.neuter-menu-page,.neuter-practice-page { --ending-navy:#293a5d; --ending-blue:#5b8fc9; --ending-green:#3e9b77; }
+.masculine-menu-page,.masculine-practice-page,.neuter-menu-page,.neuter-practice-page,.verb-menu-page,.verb-practice-page { --ending-navy:#293a5d; --ending-blue:#5b8fc9; --ending-green:#3e9b77; }
 .masculine-menu { width:min(1040px,100%); margin:auto 0; padding:42px 0 50px; }
 .masculine-menu h1 { margin-top:10px; color:var(--ending-navy); font-size:clamp(42px,5vw,62px); }
 .masculine-menu-intro { max-width:640px; margin:15px 0 0; color:#667085; font-size:16px; line-height:1.55; }
@@ -263,6 +266,7 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
 .greek-keyboard-copy span { color:#667085; font-size:11px; line-height:1.4; text-align:right; }
 .greek-keyboard { display:grid; grid-template-columns:repeat(7,minmax(44px,1fr)) repeat(2,minmax(58px,auto)); gap:7px; margin-top:11px; }
 .neuter-practice-page .greek-keyboard { grid-template-columns:repeat(8,minmax(42px,1fr)) repeat(2,minmax(58px,auto)); }
+.verb-practice-page .greek-keyboard { grid-template-columns:repeat(6,minmax(44px,1fr)) repeat(2,minmax(58px,auto)); }
 .greek-keyboard button { min-height:44px; padding:5px 8px; border:2px solid #d8d0c1; border-bottom-width:4px; border-radius:10px; background:#fff; color:var(--ending-navy); cursor:pointer; font:700 24px "GFS Didot",Georgia,serif; transition:transform .1s ease,border-color .1s ease; }
 .greek-keyboard button:hover,.greek-keyboard button:focus-visible { border-color:#9fb7cf; transform:translateY(-1px); outline:none; }
 .greek-keyboard button:active { transform:translateY(2px); border-bottom-width:2px; }
@@ -332,4 +336,5 @@ h1 { font-family:"GFS Didot", Georgia, serif; font-size:clamp(44px,6.1vw,76px); 
   .greek-keyboard-copy span { text-align:left; }
   .greek-keyboard { grid-template-columns:repeat(5,minmax(42px,1fr)); }
   .neuter-practice-page .greek-keyboard { grid-template-columns:repeat(5,minmax(42px,1fr)); }
+  .verb-practice-page .greek-keyboard { grid-template-columns:repeat(4,minmax(42px,1fr)); }
 }

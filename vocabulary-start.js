@@ -2,6 +2,7 @@ const bestLabel = document.querySelector('#vocabulary-best');
 const class5BestLabel = document.querySelector('#class5-vocabulary-best');
 const class6BestLabel = document.querySelector('#class6-vocabulary-best');
 const class7BestLabel = document.querySelector('#class7-vocabulary-best');
+const class8BestLabel = document.querySelector('#class8-vocabulary-best');
 
 if (bestLabel) {
   try {
@@ -44,5 +45,16 @@ if (class7BestLabel) {
     }
   } catch {
     class7BestLabel.textContent = 'Thirteen pairs to match';
+  }
+}
+
+if (class8BestLabel) {
+  try {
+    const savedBest = Number(window.localStorage.getItem('class8VocabularyBest'));
+    if (savedBest > 0) {
+      class8BestLabel.textContent = `Best: all 11 in ${savedBest} seconds`;
+    }
+  } catch {
+    class8BestLabel.textContent = 'Eleven pairs to match';
   }
 }

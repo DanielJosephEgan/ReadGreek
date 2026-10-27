@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102f33" />
+    <title>Verb of Being Practice · φωνή</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=GFS+Didot&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=class8-1" />
+    <script src="activity-nav.js?v=2" defer></script>
+  </head>
+  <body class="with-activity-dock">
+    <main class="lesson-shell verb-practice-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Phōnē home"><span>φωνή</span><small>Koine Greek</small></a>
+        <a class="back-link" href="verb-of-being-game.html">← Verb of Being</a>
+      </header>
+
+      <section class="ending-practice" aria-labelledby="practice-title">
+        <div class="ending-practice-heading">
+          <div>
+            <p id="practice-kicker" class="pairs-kicker">Step 1 · Form order</p>
+            <h1 id="practice-title">Singular forms</h1>
+            <p id="practice-directions">Choose forms from the bank to fill the persons in order.</p>
+          </div>
+          <span id="practice-count" class="ending-count">0 / 3</span>
+        </div>
+
+        <div id="order-practice" class="order-practice" hidden>
+          <div id="form-bank" class="ending-bank" aria-label="Form bank"></div>
+          <div id="order-list" class="ending-order-list" aria-label="Persons in order"></div>
+        </div>
+
+        <div id="type-practice" class="type-practice" hidden>
+          <div id="type-list" class="ending-type-list" aria-label="Type the forms"></div>
+          <section class="greek-keyboard-panel" aria-labelledby="greek-keyboard-title">
+            <div class="greek-keyboard-copy">
+              <strong id="greek-keyboard-title">Built-in Greek keypad</strong>
+              <span>Accents are optional. You may also type the Latin spelling on a regular keyboard.</span>
+            </div>
+            <div id="greek-keyboard" class="greek-keyboard" aria-label="Greek character keypad">
+              <button type="button" data-greek-key="ε" aria-label="Greek epsilon">ε</button>
+              <button type="button" data-greek-key="ι" aria-label="Greek iota">ι</button>
+              <button type="button" data-greek-key="μ" aria-label="Greek mu">μ</button>
+              <button type="button" data-greek-key="σ" aria-label="Greek sigma">σ</button>
+              <button type="button" data-greek-key="τ" aria-label="Greek tau">τ</button>
+              <button type="button" data-greek-key="ν" aria-label="Greek nu">ν</button>
+              <button class="keyboard-action" type="button" data-keyboard-action="backspace" aria-label="Backspace">⌫</button>
+              <button class="keyboard-action keyboard-clear" type="button" data-keyboard-action="clear">Clear</button>
+            </div>
+            <p class="keyboard-shortcut-note">Latin shortcuts accepted: <b>eimi</b>, <b>ei</b>, <b>esti(n)</b>, <b>esmen</b>, <b>este</b>, and <b>eisi(n)</b>.</p>
+          </section>
+        </div>
+
+        <p id="practice-message" class="ending-practice-message" role="status" aria-live="polite"></p>
+        <div class="ending-practice-actions">
+          <button id="reset-practice" class="ending-secondary-button" type="button">Reset</button>
+          <button id="check-practice" class="ending-primary-button" type="button">Check answers</button>
+        </div>
+
+        <div id="practice-complete" class="ending-complete" hidden>
+          <div>
+            <strong>Excellent work!</strong>
+            <span id="complete-message">You completed this practice.</span>
+          </div>
+          <a id="next-practice" href="verb-of-being-game.html">Choose another practice</a>
+        </div>
+      </section>
+    </main>
+    <div id="fireworks" class="fireworks" aria-hidden="true"></div>
+    <script src="verb-of-being-practice.js?v=class8-1"></script>
+  </body>
+</html>

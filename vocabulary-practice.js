@@ -63,6 +63,24 @@ const lessons = {
       { greek: 'εἰσί(ν)', english: 'they are', audio: 'VocabularySounds/Class7/eisi.wav' },
     ],
   },
+  8: {
+    title: 'Class 8 Vocabulary Practice',
+    audioPending: true,
+    audioNote: 'Class 8 audio can be added after the recording is available.',
+    entries: [
+      { greek: 'ἄνθρωπος, -ου, ὁ', english: 'man (anthropology)' },
+      { greek: 'μαθητής, -οῦ, ὁ', english: 'disciple' },
+      { greek: 'οἶνος, -ου, ὁ', english: 'wine' },
+      { greek: 'ζωή, -ῆς, ἡ', english: 'life (zoo, Zoe)' },
+      { greek: 'ἡμέρα, -ας, ἡ', english: 'day' },
+      { greek: 'μαρτυρία, -ας, ἡ', english: 'testimony; witness (martyr)' },
+      { greek: 'μήτηρ, μητρός, ἡ', english: 'mother' },
+      { greek: 'ὕδωρ, ὕδατος, τό', english: 'water (hydro, hydration)' },
+      { greek: 'Φίλιππος', english: 'Philip' },
+      { greek: 'Ἰωάννης', english: 'John' },
+      { greek: 'Ναθαναήλ', english: 'Nathanael' },
+    ],
+  },
 };
 
 const requestedLesson = new URLSearchParams(window.location.search).get('lesson');
@@ -79,7 +97,7 @@ document.title = `${lesson.title} · φωνή`;
 title.textContent = lesson.title;
 if (lesson.audioPending) {
   intro.textContent = 'Study each Greek entry beside its correct English meaning.';
-  status.textContent = 'Class 7 audio will be added after the recording is available.';
+  status.textContent = lesson.audioNote || 'Audio will be added after the recording is available.';
   greekHeading.textContent = 'Greek entry';
 }
 
