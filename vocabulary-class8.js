@@ -1,15 +1,15 @@
 const vocabulary = [
-  { id: 'anthropos', greek: 'ἄνθρωπος, -ου, ὁ', english: 'man (anthropology)' },
-  { id: 'mathetes', greek: 'μαθητής, -οῦ, ὁ', english: 'disciple' },
-  { id: 'oinos', greek: 'οἶνος, -ου, ὁ', english: 'wine' },
-  { id: 'zoe', greek: 'ζωή, -ῆς, ἡ', english: 'life (zoo, Zoe)' },
-  { id: 'hemera', greek: 'ἡμέρα, -ας, ἡ', english: 'day' },
-  { id: 'martyria', greek: 'μαρτυρία, -ας, ἡ', english: 'testimony; witness (martyr)' },
-  { id: 'meter', greek: 'μήτηρ, μητρός, ἡ', english: 'mother' },
-  { id: 'hydor', greek: 'ὕδωρ, ὕδατος, τό', english: 'water (hydro, hydration)' },
-  { id: 'philippos', greek: 'Φίλιππος', english: 'Philip' },
-  { id: 'ioannes', greek: 'Ἰωάννης', english: 'John' },
-  { id: 'nathanael', greek: 'Ναθαναήλ', english: 'Nathanael' },
+  { id: 'anthropos', greek: 'ἄνθρωπος, -ου, ὁ', english: 'man (anthropology)', audio: 'VocabularySounds/Class8/anthropos.wav' },
+  { id: 'mathetes', greek: 'μαθητής, -οῦ, ὁ', english: 'disciple', audio: 'VocabularySounds/Class8/mathetes.wav' },
+  { id: 'oinos', greek: 'οἶνος, -ου, ὁ', english: 'wine', audio: 'VocabularySounds/Class8/oinos.wav' },
+  { id: 'zoe', greek: 'ζωή, -ῆς, ἡ', english: 'life (zoo, Zoe)', audio: 'VocabularySounds/Class8/zoe.wav' },
+  { id: 'hemera', greek: 'ἡμέρα, -ας, ἡ', english: 'day', audio: 'VocabularySounds/Class8/hemera.wav' },
+  { id: 'martyria', greek: 'μαρτυρία, -ας, ἡ', english: 'testimony; witness (martyr)', audio: 'VocabularySounds/Class8/martyria.wav' },
+  { id: 'meter', greek: 'μήτηρ, μητρός, ἡ', english: 'mother', audio: 'VocabularySounds/Class8/meter.wav' },
+  { id: 'hydor', greek: 'ὕδωρ, ὕδατος, τό', english: 'water (hydro, hydration)', audio: 'VocabularySounds/Class8/hydor.wav' },
+  { id: 'philippos', greek: 'Φίλιππος', english: 'Philip', audio: 'VocabularySounds/Class8/philippos.wav' },
+  { id: 'ioannes', greek: 'Ἰωάννης', english: 'John', audio: 'VocabularySounds/Class8/ioannes.wav' },
+  { id: 'nathanael', greek: 'Ναθαναήλ', english: 'Nathanael', audio: 'VocabularySounds/Class8/nathanael.wav' },
 ];
 
 const shuffle = (items) => {
@@ -38,15 +38,65 @@ let checking = false;
 let startedAt = 0;
 let elapsed = 0;
 let timer = null;
+let activeAudio = null;
+let activeAudioButton = null;
+
+function resetAudioPlayback() {
+  if (activeAudioButton) {
+    activeAudioButton.classList.remove('playing-audio');
+    const marker = activeAudioButton.querySelector('.pair-audio-mark');
+    if (marker) marker.textContent = '▶';
+  }
+  activeAudio = null;
+  activeAudioButton = null;
+}
+
+function playVocabularyAudio(item, button) {
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio.currentTime = 0;
+  }
+  resetAudioPlayback();
+
+  const audio = new Audio(item.audio);
+  activeAudio = audio;
+  activeAudioButton = button;
+  button.classList.add('playing-audio');
+  button.querySelector('.pair-audio-mark').textContent = '■';
+  audio.addEventListener('ended', resetAudioPlayback, { once: true });
+  audio.addEventListener('error', () => {
+    resetAudioPlayback();
+    message.textContent = 'That recording could not play. Please try again.';
+    message.className = 'pair-message error';
+  }, { once: true });
+  audio.play().catch(() => {
+    resetAudioPlayback();
+    message.textContent = 'Select the Greek entry again to hear its recording.';
+    message.className = 'pair-message error';
+  });
+}
 
 function makeOption(item, side) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = `pair-card ${side === 'greek' ? 'greek-pair' : 'english-pair'}`;
   button.dataset.match = item.id;
-  button.textContent = side === 'greek' ? item.greek : item.english;
+  if (side === 'greek') {
+    const entry = document.createElement('span');
+    entry.textContent = item.greek;
+    const audioMarker = document.createElement('span');
+    audioMarker.className = 'pair-audio-mark';
+    audioMarker.setAttribute('aria-hidden', 'true');
+    audioMarker.textContent = '▶';
+    button.append(entry, audioMarker);
+  } else {
+    button.textContent = item.english;
+  }
   button.setAttribute('aria-label', side === 'greek' ? `Greek entry ${item.greek}` : `English meaning ${item.english}`);
-  button.addEventListener('click', () => chooseOption(button, side));
+  button.addEventListener('click', () => {
+    if (side === 'greek' && !button.classList.contains('matched')) playVocabularyAudio(item, button);
+    chooseOption(button, side);
+  });
   return button;
 }
 
@@ -77,6 +127,8 @@ function updatePace() {
 }
 
 function renderGame() {
+  if (activeAudio) activeAudio.pause();
+  resetAudioPlayback();
   if (timer) window.clearInterval(timer);
   greekOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'greek')));
   englishOptions.replaceChildren(...shuffle(vocabulary).map((item) => makeOption(item, 'english')));
